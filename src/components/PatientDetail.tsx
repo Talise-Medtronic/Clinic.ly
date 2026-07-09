@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useMemo, useState, useEffect, useRef } from "react"
 import type { Patient } from "../data/patients"
 import {
   getVitals,
@@ -598,95 +598,199 @@ function getEventTimeLabel(patient: Patient): string {
   return `${entry.value}${entry.unit ? ` ${entry.unit}` : ""}`
 }
 
-function AiEcgViewer({ patient }: { patient: Patient }) {
-  const [view, setView] = useState<"raw" | "gradcam">("raw")
+interface SavedEcgEvent {
+  id: number
+  timestamp: Date
+  example: (typeof ecgExamples)[number]
+  confirmed: boolean
+  declined: boolean
+}
 
+function formatTime(d: Date) {
+  return d.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit" })
+}
+
+function AiEcgViewer({ patient }: { patient: Patient }) {
   const isAfibPatient = /(af|atrial fib)/i.test(`${patient.alertTitle} ${patient.alertDescription}`)
   const afibPool = ecgExamples.filter((e) => e.gradcamClass === "AFIB")
   const nPool = ecgExamples.filter((e) => e.gradcamClass === "N")
-  const pool = isAfibPatient ? afibPool : nPool
-  const example = pool[patient.id.charCodeAt(1) % pool.length]
-  const isAfib = example.gradcamClass === "AFIB"
+
+  // Pick a deterministic live (N) example for this patient
+  const liveExample = nPool[patient.id.charCodeAt(1) % nPool.length]
+
+  // Saved AFIB events — pre-seeded with one if this is an AFIB patient
+  const [savedEvents, setSavedEvents] = useState<SavedEcgEvent[]>(() => {
+    if (!isAfibPatient) return []
+    const ex = afibPool[patient.id.charCodeAt(1) % afibPool.length]
+    const t = new Date(); t.setMinutes(t.getMinutes() - 4)
+    return [{ id: 0, timestamp: t, example: ex, confirmed: false, declined: false }]
+  })
+  const [tick, setTick] = useState(0)
+  const [liveTime, setLiveTime] = useState(new Date())
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const scrollAnimRef = useRef<number | null>(null)
+  const eventCounterRef = useRef(savedEvents.length)
+
+  // Live clock tick every second
+  useEffect(() => {
+    const id = setInterval(() => setLiveTime(new Date()), 1000)
+    return () => clearInterval(id)
+  }, [])
+
+  // Device tick every 60s — adds a new saved event if AFIB detected
+  useEffect(() => {
+    const id = setInterval(() => {
+      setTick((t) => t + 1)
+      // Simulate: 40% chance of AFIB on each minute tick for AFIB patients
+      const shouldDetectAfib = isAfibPatient && Math.random() < 0.4
+      if (shouldDetectAfib) {
+        const ex = afibPool[(eventCounterRef.current + 1) % afibPool.length]
+        eventCounterRef.current += 1
+        setSavedEvents((prev) => [
+          { id: eventCounterRef.current, timestamp: new Date(), example: ex, confirmed: false, declined: false },
+          ...prev,
+        ])
+      }
+    }, 60_000)
+    return () => clearInterval(id)
+  }, [isAfibPatient])
+
+  // Auto-scroll the live ECG strip
+  useEffect(() => {
+    const el = scrollRef.current
+    if (!el) return
+    let pos = 0
+    function step() {
+      if (!el) return
+      pos += 0.6
+      if (pos >= el.scrollWidth - el.clientWidth) pos = 0
+      el.scrollLeft = pos
+      scrollAnimRef.current = requestAnimationFrame(step)
+    }
+    scrollAnimRef.current = requestAnimationFrame(step)
+    return () => { if (scrollAnimRef.current) cancelAnimationFrame(scrollAnimRef.current) }
+  }, [])
+
+  function updateEvent(id: number, patch: Partial<Pick<SavedEcgEvent, "confirmed" | "declined">>) {
+    setSavedEvents((prev) => prev.map((e) => e.id === id ? { ...e, ...patch } : e))
+  }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-      {/* Classification + view toggle */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <span
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: 10,
-              fontWeight: 700,
-              letterSpacing: "0.08em",
-              padding: "3px 10px",
-              borderRadius: 999,
-              background: isAfib ? "rgba(205, 0, 37, 0.10)" : "rgba(0, 139, 93, 0.10)",
-              color: isAfib ? "var(--danger)" : "var(--ok)",
-              border: `1px solid ${isAfib ? "rgba(205,0,37,0.22)" : "rgba(0,139,93,0.22)"}`,
-            }}
-          >
-            AI: {isAfib ? "AFIB" : "No AFIB"}
-          </span>
-          <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--text-subtle)" }}>
-            {example.recordId}
+    <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+
+      {/* ── Live feed ── */}
+      <div>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+              <div style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--ok)", animation: "pulse-border 1.4s ease-in-out infinite" }} />
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700, color: "var(--ok)", letterSpacing: "0.08em" }}>LIVE</span>
+            </div>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--text-subtle)" }}>{formatTime(liveTime)}</span>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--text-subtle)" }}>· No AFIB detected</span>
+          </div>
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--text-subtle)", letterSpacing: "0.06em" }}>
+            {liveExample.recordId}
           </span>
         </div>
-        <div style={{ display: "flex", gap: 5 }}>
+        <div
+          ref={scrollRef}
+          style={{
+            overflowX: "hidden",
+            overflowY: "hidden",
+            borderRadius: 8,
+            border: "1px solid rgba(0, 139, 93, 0.25)",
+            background: "#f7fffb",
+            boxShadow: "0 0 0 1px rgba(0,139,93,0.08)",
+            cursor: "default",
+          }}
+        >
+          <img
+            src={liveExample.rawImage}
+            alt="Live ECG feed"
+            style={{ height: 130, width: "auto", maxWidth: "none", display: "block" }}
+            draggable={false}
+          />
+        </div>
+        <div style={{ marginTop: 5, fontFamily: "var(--font-ui)", fontSize: 10, color: "var(--text-subtle)" }}>
+          Real-time feed · Device polling every 60 s · Scroll to review history
+        </div>
+      </div>
+
+      {/* ── Saved AFIB events ── */}
+      {savedEvents.length > 0 && (
+        <div>
+          <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--text-subtle)", marginBottom: 8 }}>
+            Saved AFIB Events ({savedEvents.length})
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {savedEvents.map((ev) => (
+              <SavedEventCard key={ev.id} event={ev} onUpdate={(patch) => updateEvent(ev.id, patch)} />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function SavedEventCard({ event, onUpdate }: { event: SavedEcgEvent; onUpdate: (patch: Partial<Pick<SavedEcgEvent, "confirmed" | "declined">>) => void }) {
+  const [view, setView] = useState<"raw" | "gradcam">("raw")
+
+  return (
+    <div
+      style={{
+        borderRadius: 8,
+        border: "1px solid rgba(205, 0, 37, 0.22)",
+        background: "rgba(255,255,255,0.85)",
+        overflow: "hidden",
+      }}
+    >
+      {/* Header */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 12px", background: "rgba(205,0,37,0.06)", borderBottom: "1px solid rgba(205,0,37,0.12)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700, color: "var(--danger)", letterSpacing: "0.08em" }}>AFIB DETECTED</span>
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--text-subtle)" }}>
+            Saved {event.timestamp.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}
+          </span>
+        </div>
+        <div style={{ display: "flex", gap: 4 }}>
           {(["raw", "gradcam"] as const).map((v) => (
-            <button
-              key={v}
-              onClick={() => setView(v)}
-              style={{
-                border: "1px solid rgba(20, 15, 75, 0.18)",
-                background: view === v ? "var(--primary-base)" : "#fff",
-                color: view === v ? "#fff" : "var(--text-mid)",
-                borderRadius: 6,
-                padding: "3px 8px",
-                fontFamily: "var(--font-ui)",
-                fontSize: 10,
-                fontWeight: 600,
-                cursor: "pointer",
-              }}
-            >
-              {v === "raw" ? "Raw ECG" : "Grad-CAM"}
+            <button key={v} onClick={() => setView(v)} style={{ border: "1px solid rgba(20,15,75,0.18)", background: view === v ? "var(--primary-base)" : "#fff", color: view === v ? "#fff" : "var(--text-mid)", borderRadius: 5, padding: "2px 7px", fontFamily: "var(--font-ui)", fontSize: 10, fontWeight: 600, cursor: "pointer" }}>
+              {v === "raw" ? "Raw" : "Grad-CAM"}
             </button>
           ))}
         </div>
       </div>
 
       {/* Scrollable image */}
-      <div
-        style={{
-          overflowX: "auto",
-          overflowY: "hidden",
-          borderRadius: 8,
-          border: "1px solid rgba(0, 79, 154, 0.16)",
-          background: "#fff",
-          boxShadow: "0 6px 14px rgba(0, 57, 107, 0.06)",
-        }}
-      >
+      <div style={{ overflowX: "auto", overflowY: "hidden", background: "#fff5f5" }}>
         <img
-          src={view === "raw" ? example.rawImage : example.gradcamImage}
-          alt={view === "raw" ? "Raw ECG signal" : "Grad-CAM explanation"}
-          style={{ height: 140, width: "auto", maxWidth: "none", display: "block" }}
+          src={view === "raw" ? event.example.rawImage : event.example.gradcamImage}
+          alt={view === "raw" ? "Saved ECG event" : "Grad-CAM analysis"}
+          style={{ height: 120, width: "auto", maxWidth: "none", display: "block" }}
           draggable={false}
         />
       </div>
 
-      {view === "gradcam" && (
-        <div style={{ fontFamily: "var(--font-ui)", fontSize: 11, color: "var(--text-subtle)", lineHeight: 1.55 }}>
-          Red regions indicate signal segments most influential in the model&apos;s{" "}
-          <strong style={{ color: isAfib ? "var(--danger)" : "var(--ok)" }}>
-            {isAfib ? "AFIB" : "No AFIB"}
-          </strong>{" "}
-          classification. Model trained on the{" "}
-          <a href="https://physionet.org/content/afdb/1.0.0/" target="_blank" rel="noreferrer" style={{ color: "var(--primary-base)", textDecoration: "none" }}>
-            PhysioNet AF Database
-          </a>
-          .
-        </div>
-      )}
+      {/* Actions */}
+      <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 12px", borderTop: "1px solid rgba(20,15,75,0.08)" }}>
+        <button
+          onClick={() => onUpdate({ confirmed: !event.confirmed, declined: false })}
+          style={{ border: "1px solid rgba(20,15,75,0.18)", borderRadius: 6, background: event.confirmed ? "rgba(0,139,93,0.12)" : "#fff", color: event.confirmed ? "var(--ok)" : "var(--text-mid)", fontFamily: "var(--font-ui)", fontSize: 11, fontWeight: 600, padding: "4px 9px", cursor: "pointer" }}
+        >
+          {event.confirmed ? "Confirmed ✓" : "Confirm"}
+        </button>
+        <button
+          onClick={() => onUpdate({ declined: !event.declined, confirmed: false })}
+          style={{ border: "1px solid rgba(20,15,75,0.18)", borderRadius: 6, background: event.declined ? "rgba(205,0,37,0.10)" : "#fff", color: event.declined ? "var(--danger)" : "var(--text-mid)", fontFamily: "var(--font-ui)", fontSize: 11, fontWeight: 600, padding: "4px 9px", cursor: "pointer" }}
+        >
+          {event.declined ? "Declined ✗" : "Decline"}
+        </button>
+        <span style={{ fontFamily: "var(--font-ui)", fontSize: 11, color: event.confirmed ? "var(--ok)" : event.declined ? "var(--danger)" : "var(--warning)", marginLeft: 4 }}>
+          {event.confirmed ? "Review complete" : event.declined ? "Event declined" : "Awaiting review"}
+        </span>
+      </div>
     </div>
   )
 }
