@@ -99,6 +99,47 @@ The script prints JSON to stdout and can also write file JSON via `--json-out`.
 If any predicted class is non-normal, explainability PNG files are generated and their paths are returned in `explainability_images` in the JSON output.
 Supported explainability methods are `saliency`, `gradcam`, or `both`.
 
+## 5) Verification evaluator
+
+Run a full verification report after training.
+
+```powershell
+python evaluate_verification.py \
+  --model-path artifacts\singlelead_cnn.pt \
+  --verification-dataset processed\verification_singlelead_60s.npz \
+  --threshold 0.5 \
+  --output-dir reports \
+  --output-prefix verification_eval
+```
+
+This writes:
+
+- `reports/verification_eval.json`
+- `reports/verification_eval_per_class.csv`
+
+## 6) Threshold tuner
+
+Tune threshold on verification data with abnormal recall as the primary objective.
+
+```powershell
+python tune_threshold.py \
+  --model-path artifacts\singlelead_cnn.pt \
+  --verification-dataset processed\verification_singlelead_60s.npz \
+  --min-threshold 0.1 \
+  --max-threshold 0.9 \
+  --step 0.05 \
+  --min-abnormal-precision 0.30 \
+  --output-dir reports \
+  --output-prefix threshold_tuning \
+  --write-best-threshold-json artifacts\best_threshold.json
+```
+
+This writes:
+
+- `reports/threshold_tuning.csv`
+- `reports/threshold_tuning.json`
+- `artifacts/best_threshold.json`
+
 ## Notes
 
 - This is a practical starter baseline. You can improve model quality with better label mapping, augmentation, class weighting, and temporal architectures.
