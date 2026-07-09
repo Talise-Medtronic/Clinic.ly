@@ -142,7 +142,6 @@ export default function PatientDetail({ patient, onClinicalNotesChange }: Props)
       </div>
 
       <SectionCard title="Header Details" actions={<CardActions labels={["Edit"]} />}>
-        <Row label="Description" value={patient.alertDescription} />
         <Row label="Type" value={alertLabel(patient.alertLevel)} />
         <Row label="Expiration (UTC)" value="2026-12-31 23:59 UTC" mono />
         <Row label="Model" value={patient.deviceModel} />
