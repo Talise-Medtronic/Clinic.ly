@@ -1,4 +1,11 @@
 import type { Patient } from "../data/patients"
+import {
+  getVitals,
+  higherIsWorse,
+  type TrendDirection,
+  type VitalSeries,
+  type VitalStatus,
+} from "../data/vitals"
 
 interface Props {
   patient: Patient
@@ -208,6 +215,20 @@ export default function PatientDetail({ patient, onClinicalNotesChange }: Props)
         </div>
       </SectionCard>
 
+      <SectionCard title="Vitals & Monitoring" actions={<CardActions labels={["Last 14 days"]} />}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+            gap: 8,
+          }}
+        >
+          {getVitals(patient.id).map((v) => (
+            <VitalCard key={v.kind} series={v} />
+          ))}
+        </div>
+      </SectionCard>
+
       <SectionCard title="Application IDs" actions={<CardActions labels={["Edit", "Add"]} />}>
         <Row label="Primary App" value="Clinic Remote Monitor" />
         <Row label="App ID" value={`${patient.deviceId}-APP`} mono />
@@ -344,3 +365,151 @@ function Row({ label, value, mono }: { label: string; value: string; mono?: bool
     </div>
   )
 }
+
+function vitalStatusColor(status: VitalStatus): string {
+  if (status === "alert") return "var(--danger)"
+  if (status === "watch") return "var(--warning)"
+  return "var(--ok)"
+}
+
+function vitalStatusLabel(status: VitalStatus): string {
+  if (status === "alert") return "ALERT"
+  if (status === "watch") return "WATCH"
+  return "NORMAL"
+}
+
+function trendArrow(t: TrendDirection): string {
+  if (t === "up") return "\u2191"
+  if (t === "down") return "\u2193"
+  return "\u2192"
+}
+
+function changeText(v: VitalSeries): string {
+  if (Math.abs(v.change) < 0.05) return "stable"
+  const sign = v.change > 0 ? "+" : "-"
+  const mag = Math.abs(v.change)
+  const val = v.kind === "weight" ? mag.toFixed(1) : String(Math.round(mag))
+  return `${sign}${val} ${v.unit}`
+}
+
+function trendColor(v: VitalSeries): string {
+  if (v.trend === "flat") return "var(--text-subtle)"
+  const rising = v.trend === "up"
+  const bad = higherIsWorse(v.kind) ? rising : !rising
+  return bad ? "var(--danger)" : "var(--ok)"
+}
+
+function Sparkline({ series }: { series: VitalSeries }) {
+  const pts = series.readings
+  if (pts.length < 2) return null
+
+  const w = 200
+  const h = 34
+  const pad = 3
+  const values = pts.map((p) => p.value)
+  const min = Math.min(...values)
+  const max = Math.max(...values)
+  const range = max - min < 1e-6 ? 1 : max - min
+  const stepX = (w - pad * 2) / (pts.length - 1)
+
+  const points = pts
+    .map((p, i) => {
+      const x = pad + stepX * i
+      const y = h - pad - ((p.value - min) / range) * (h - pad * 2)
+      return `${x.toFixed(1)},${y.toFixed(1)}`
+    })
+    .join(" ")
+
+  return (
+    <svg
+      viewBox={`0 0 ${w} ${h}`}
+      preserveAspectRatio="none"
+      style={{ width: "100%", height: 34, marginTop: 8, display: "block" }}
+    >
+      <polyline
+        points={points}
+        fill="none"
+        stroke={vitalStatusColor(series.status)}
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+function VitalCard({ series }: { series: VitalSeries }) {
+  const color = vitalStatusColor(series.status)
+
+  return (
+    <div
+      style={{
+        background: "rgba(255,255,255,0.74)",
+        borderRadius: 10,
+        padding: "10px 12px",
+        border: "1px solid rgba(0, 79, 154, 0.14)",
+        boxShadow: "0 6px 14px rgba(0, 57, 107, 0.06)",
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8 }}>
+        <div
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: 10,
+            color: "var(--text-subtle)",
+            textTransform: "uppercase",
+            letterSpacing: "0.06em",
+          }}
+        >
+          {series.displayName}
+        </div>
+        <span
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: 9,
+            fontWeight: 700,
+            color: "#f7fffc",
+            background: color,
+            borderRadius: 999,
+            padding: "2px 6px",
+            letterSpacing: "0.06em",
+            flexShrink: 0,
+          }}
+        >
+          {vitalStatusLabel(series.status)}
+        </span>
+      </div>
+
+      <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginTop: 4 }}>
+        <span
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: 20,
+            fontWeight: 700,
+            color: "var(--text-strong)",
+            lineHeight: 1,
+          }}
+        >
+          {series.latestDisplay}
+        </span>
+        <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--text-subtle)" }}>
+          {series.unit}
+        </span>
+        <span
+          style={{
+            marginLeft: "auto",
+            fontFamily: "var(--font-mono)",
+            fontSize: 11,
+            fontWeight: 600,
+            color: trendColor(series),
+          }}
+        >
+          {trendArrow(series.trend)} {changeText(series)}
+        </span>
+      </div>
+
+      <Sparkline series={series} />
+    </div>
+  )
+}
+
