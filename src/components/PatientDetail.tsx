@@ -176,7 +176,7 @@ export default function PatientDetail({ patient, onClinicalNotesChange }: Props)
 
       {isAbnormalRhythm && (
         <SectionCard title="ECG Event Snapshot" actions={<CardActions labels={[isConfirmed ? "Confirmed" : "Needs Review"]} />}>
-          <AiEcgViewer patient={patient} />
+          <AiEcgViewer key={patient.id} patient={patient} />
 
           <div style={{ marginTop: 10, display: "grid", gap: 6 }}>
             <Row label="Detected Event" value={patient.alertTitle} />
