@@ -295,7 +295,7 @@ export default function PatientDetail({ patient, onClinicalNotesChange }: Props)
       </SectionCard>
 
       <SectionCard title="Users" actions={<CardActions labels={["Edit", "Add"]} />}>
-        <Row label="Attending" value="Dr. Geoff Martha" />
+        <Row label="Attending" value="Dr Doof" />
         <Row label="Role" value="Cardiology" />
       </SectionCard>
 

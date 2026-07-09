@@ -29,6 +29,7 @@ const ACTIVITY_LIST = [
 ]
 
 const INTENSITY = ["Light", "Moderate", "Vigorous"]
+const PROVIDERS = ["Garmin", "Apple Watch", "Fitbit", "Oura"]
 
 function SectionTab({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
   return (
@@ -441,6 +442,7 @@ export default function LogTab() {
   const [viewMode, setViewMode] = useState<ViewMode>("list")
   const [searchValue, setSearchValue] = useState("")
   const [filterOpen, setFilterOpen] = useState(false)
+  const [selectedProvider, setSelectedProvider] = useState(PROVIDERS[0])
 
   // Mock data for logged entries
   const loggedEntries = {
@@ -468,6 +470,60 @@ export default function LogTab() {
         <div style={{ fontSize: 12, color: "var(--text-muted)" }}>
           Track your health data
         </div>
+      </div>
+
+      <div
+        style={{
+          background: "var(--surface)",
+          border: "1px solid var(--border)",
+          borderRadius: 12,
+          padding: "12px 14px",
+          marginBottom: 14,
+        }}
+      >
+        <div style={{ fontFamily: "var(--mono)", fontSize: 9, fontWeight: 700, letterSpacing: "0.10em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 7 }}>
+          Connect Provider (Mock)
+        </div>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 7, marginBottom: 10 }}>
+          {PROVIDERS.map((provider) => {
+            const active = provider === selectedProvider
+            return (
+              <button
+                key={provider}
+                onClick={() => setSelectedProvider(provider)}
+                style={{
+                  padding: "6px 11px",
+                  background: active ? "rgba(16,16,235,0.12)" : "var(--surface-2)",
+                  border: "1px solid",
+                  borderColor: active ? "rgba(16,16,235,0.45)" : "var(--border-strong)",
+                  borderRadius: 999,
+                  fontFamily: "var(--sans)",
+                  fontSize: 12,
+                  color: active ? "var(--blue-bright)" : "var(--text-sub)",
+                  cursor: "pointer",
+                }}
+              >
+                {provider}
+              </button>
+            )
+          })}
+        </div>
+        <button
+          style={{
+            width: "100%",
+            padding: "10px 12px",
+            background: "rgba(16,16,235,0.1)",
+            border: "1px solid rgba(16,16,235,0.32)",
+            borderRadius: 10,
+            fontFamily: "var(--sans)",
+            fontSize: 12,
+            fontWeight: 600,
+            color: "var(--blue-bright)",
+            cursor: "pointer",
+          }}
+        >
+          Connect provider
+        </button>
       </div>
 
       {/* View Toggle */}

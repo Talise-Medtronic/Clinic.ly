@@ -104,7 +104,7 @@ function AlertBanner() {
       </div>
       <div>
         <div style={{ fontSize: 12, fontWeight: 600, color: "var(--red)", marginBottom: 2 }}>Elevated Blood Pressure Detected</div>
-        <div style={{ fontSize: 11, color: "rgba(239,68,68,0.7)" }}>Reading of 142/91 mmHg at 9:14 AM exceeded your target range. Dr. Halvorsen has been notified.</div>
+        <div style={{ fontSize: 11, color: "rgba(239,68,68,0.7)" }}>Reading of 142/91 mmHg at 9:14 AM exceeded your target range. Dr Doof has been notified.</div>
       </div>
     </div>
   )
@@ -154,7 +154,7 @@ export default function HomeTab() {
           {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }).toUpperCase()}
         </div>
         <div style={{ fontSize: 20, fontWeight: 700, color: "var(--text)", letterSpacing: "-0.02em" }}>
-          Good morning, Margaret
+          Good morning, John
         </div>
         <div style={{ fontSize: 12, color: "var(--text-sub)", marginTop: 2 }}>
           Your device is syncing · Last update 4 min ago
