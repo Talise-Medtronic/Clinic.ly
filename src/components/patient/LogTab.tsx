@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import TableToolbar from "./TableToolbar"
 import RadialList from "./RadialList"
 import LogMascot from "./LogMascot"
@@ -442,8 +442,18 @@ export default function LogTab({ streak, onLogSaved }: { streak: number; onLogSa
   const [viewMode, setViewMode] = useState<ViewMode>("list")
   const [searchValue, setSearchValue] = useState("")
   const [filterOpen, setFilterOpen] = useState(false)
+  const [celebrationOpen, setCelebrationOpen] = useState(false)
   const [mascotMood, setMascotMood] = useState<"idle" | "happy">("idle")
   const [selectedProvider, setSelectedProvider] = useState(PROVIDERS[0])
+  const celebrationTimer = useRef<number | null>(null)
+
+  useEffect(() => {
+    return () => {
+      if (celebrationTimer.current) {
+        window.clearTimeout(celebrationTimer.current)
+      }
+    }
+  }, [])
 
   // Mock data for logged entries
   const loggedEntries = {
@@ -463,13 +473,107 @@ export default function LogTab({ streak, onLogSaved }: { streak: number; onLogSa
 
   function handleSave() {
     setMascotMood("happy")
+    setCelebrationOpen(true)
     setViewMode("list")
     onLogSaved()
-    window.setTimeout(() => setMascotMood("idle"), 1400)
+
+    if (celebrationTimer.current) {
+      window.clearTimeout(celebrationTimer.current)
+    }
+
+    celebrationTimer.current = window.setTimeout(() => {
+      setMascotMood("idle")
+      setCelebrationOpen(false)
+      celebrationTimer.current = null
+    }, 2400)
   }
 
   return (
-    <div style={{ padding: "16px 16px 24px" }}>
+    <div style={{ position: "relative", padding: "16px 16px 24px" }}>
+      {celebrationOpen && (
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: 10,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "rgba(15,23,42,0.65)",
+            backdropFilter: "blur(6px)",
+            padding: 24,
+          }}
+        >
+          <div
+            style={{
+              position: "relative",
+              width: "100%",
+              maxWidth: 420,
+              background: "linear-gradient(180deg, rgba(255,255,255,0.96), rgba(241,245,249,0.98))",
+              border: "1px solid rgba(148,163,184,0.3)",
+              borderRadius: 24,
+              padding: "28px 24px 22px",
+              boxShadow: "0 24px 80px rgba(15,23,42,0.24)",
+              textAlign: "center",
+            }}
+          >
+            <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+              {[...Array(10)].map((_, index) => {
+                const left = 8 + (index % 5) * 18
+                const top = 8 + Math.floor(index / 5) * 18
+                const size = 8 + (index % 3) * 4
+                const hue = 190 + (index * 16)
+                return (
+                  <span
+                    key={index}
+                    style={{
+                      position: "absolute",
+                      left: `${left}%`,
+                      top: `${top}%`,
+                      width: size,
+                      height: size,
+                      borderRadius: "50%",
+                      background: `hsl(${hue}, 90%, 70%)`,
+                      opacity: 0.85,
+                      transform: `translate(-50%, -50%) rotate(${index * 22}deg)`,
+                    }}
+                  />
+                )
+              })}
+            </div>
+            <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+              <div style={{ width: 120, height: 120, margin: "0 auto" }}>
+                <LogMascot mood="happy" />
+              </div>
+              <div style={{ fontSize: 20, fontWeight: 800, color: "var(--text)", letterSpacing: "-0.03em" }}>
+                Celebration time!
+              </div>
+              <div style={{ fontSize: 14, color: "var(--text-sub)", lineHeight: 1.6 }}>
+                You logged something great today — keep your streak going.
+              </div>
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  marginTop: 6,
+                  padding: "10px 16px",
+                  background: "rgba(59,130,246,0.12)",
+                  borderRadius: 999,
+                  border: "1px solid rgba(59,130,246,0.24)",
+                  fontFamily: "var(--mono)",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  color: "#1d4ed8",
+                }}
+              >
+                {streak} {streak === 1 ? "day" : "days"} streak
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div style={{ marginBottom: 16 }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
