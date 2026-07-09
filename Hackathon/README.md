@@ -78,6 +78,8 @@ python predict_rhythm.py \
   --input-csv sample_segment.csv \
   --source-fs 250 \
   --threshold 0.5 \
+  --explain-method both \
+  --explain-dir outputs\explanations \
   --json-out outputs\prediction.json
 ```
 
@@ -88,10 +90,14 @@ python predict_rhythm.py \
   --model-path artifacts\singlelead_cnn.pt \
   --wfdb-record "D:\physionet\challenge2020\training\A0001" \
   --lead II \
-  --threshold 0.5
+  --threshold 0.5 \
+  --explain-method gradcam \
+  --explain-dir outputs\explanations
 ```
 
 The script prints JSON to stdout and can also write file JSON via `--json-out`.
+If any predicted class is non-normal, explainability PNG files are generated and their paths are returned in `explainability_images` in the JSON output.
+Supported explainability methods are `saliency`, `gradcam`, or `both`.
 
 ## Notes
 

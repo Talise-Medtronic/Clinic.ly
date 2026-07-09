@@ -3,3 +3,4 @@ scipy>=1.11
 wfdb>=4.1
 torch>=2.2
 scikit-learn>=1.4
+matplotlib>=3.8
