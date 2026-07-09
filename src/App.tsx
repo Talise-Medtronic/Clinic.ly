@@ -197,43 +197,6 @@ export default function App() {
         </div>
       </header>
 
-      <div
-        style={{
-          height: 42,
-          display: "flex",
-          alignItems: "stretch",
-          gap: 6,
-          padding: "0 16px",
-          borderBottom: "1px solid rgba(20, 15, 75, 0.14)",
-          background: "rgba(255, 255, 255, 0.82)",
-          position: "relative",
-          zIndex: 1,
-          flexShrink: 0,
-        }}
-      >
-        {([
-          { key: "patients", label: "Doctor Portal" },
-        ] as const).map((item) => (
-          <button
-            key={item.key}
-            onClick={() => setView(item.key)}
-            style={{
-              border: "none",
-              background: "transparent",
-              borderBottom: view === item.key ? "2px solid var(--primary-base)" : "2px solid transparent",
-              color: view === item.key ? "var(--primary-base)" : "var(--text-mid)",
-              fontFamily: "var(--font-ui)",
-              fontSize: 12,
-              fontWeight: view === item.key ? 600 : 500,
-              padding: "0 10px",
-              cursor: "pointer",
-            }}
-          >
-            {item.label}
-          </button>
-        ))}
-      </div>
-
       {isMobile && view === "patients" && (
         <div
           style={{
