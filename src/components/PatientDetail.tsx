@@ -618,12 +618,24 @@ function AiEcgViewer({ patient }: { patient: Patient }) {
   // Pick a deterministic live (N) example for this patient
   const liveExample = nPool[patient.id.charCodeAt(1) % nPool.length]
 
-  // Saved AFIB events — pre-seeded with one if this is an AFIB patient
+  // Saved AFIB events — pre-seeded for demo (Sergey gets 3, other AFIB patients get 1)
   const [savedEvents, setSavedEvents] = useState<SavedEcgEvent[]>(() => {
     if (!isAfibPatient) return []
-    const ex = afibPool[patient.id.charCodeAt(1) % afibPool.length]
-    const t = new Date(); t.setMinutes(t.getMinutes() - 4)
-    return [{ id: 0, timestamp: t, example: ex, confirmed: false, declined: false }]
+    const isSergey = patient.id === "p3"
+    const seed: SavedEcgEvent[] = []
+    if (isSergey) {
+      const offsets = [2, 19, 47] // minutes ago
+      offsets.forEach((mins, i) => {
+        const ex = afibPool[i % afibPool.length]
+        const t = new Date(); t.setMinutes(t.getMinutes() - mins)
+        seed.push({ id: i, timestamp: t, example: ex, confirmed: false, declined: false })
+      })
+    } else {
+      const ex = afibPool[patient.id.charCodeAt(1) % afibPool.length]
+      const t = new Date(); t.setMinutes(t.getMinutes() - 4)
+      seed.push({ id: 0, timestamp: t, example: ex, confirmed: false, declined: false })
+    }
+    return seed
   })
   const [tick, setTick] = useState(0)
   const [liveTime, setLiveTime] = useState(new Date())
