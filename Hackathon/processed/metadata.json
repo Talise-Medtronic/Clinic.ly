@@ -1,0 +1,28 @@
+{
+  "class_codes": [
+    "AFIB",
+    "AFL",
+    "N",
+    "OTHER"
+  ],
+  "class_descriptions": {
+    "AFIB": "atrial fibrillation",
+    "AFL": "atrial flutter",
+    "N": "normal rhythm",
+    "OTHER": "other rhythm"
+  },
+  "target_fs": 250,
+  "segment_seconds": 60,
+  "segment_samples": 15000,
+  "requested_lead": "ECG1",
+  "dataset": "mitbih-afdb",
+  "data_root": "C:\\Users\\barabs1\\Desktop\\files",
+  "num_samples": 14041,
+  "num_classes": 4,
+  "train_samples": 10976,
+  "verification_samples": 3065,
+  "verification_fraction": 0.2,
+  "split_seed": 42,
+  "split_grouping": "record/file ID",
+  "num_skipped": 2
+}

@@ -1,0 +1,170 @@
+[
+  {
+    "dataset_index": 368,
+    "record_id": "04015__seg00368",
+    "primary_true_code": "N",
+    "predicted_codes": [
+      "N"
+    ],
+    "json_path": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\N\\example_000368.json",
+    "class_correct": true,
+    "prediction_status": "CORRECT",
+    "raw_ecg_image": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\N\\example_000368_raw.png",
+    "gradcam_image": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\N\\example_000368_gradcam.png",
+    "gradcam_class": "N"
+  },
+  {
+    "dataset_index": 1418,
+    "record_id": "04048__seg00192",
+    "primary_true_code": "N",
+    "predicted_codes": [
+      "N"
+    ],
+    "json_path": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\N\\example_001418.json",
+    "class_correct": true,
+    "prediction_status": "CORRECT",
+    "raw_ecg_image": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\N\\example_001418_raw.png",
+    "gradcam_image": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\N\\example_001418_gradcam.png",
+    "gradcam_class": "N"
+  },
+  {
+    "dataset_index": 1756,
+    "record_id": "04048__seg00530",
+    "primary_true_code": "N",
+    "predicted_codes": [
+      "N"
+    ],
+    "json_path": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\N\\example_001756.json",
+    "class_correct": true,
+    "prediction_status": "CORRECT",
+    "raw_ecg_image": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\N\\example_001756_raw.png",
+    "gradcam_image": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\N\\example_001756_gradcam.png",
+    "gradcam_class": "N"
+  },
+  {
+    "dataset_index": 2951,
+    "record_id": "04746__seg00499",
+    "primary_true_code": "AFIB",
+    "predicted_codes": [
+      "AFIB"
+    ],
+    "json_path": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\AFIB\\example_002951.json",
+    "class_correct": true,
+    "prediction_status": "CORRECT",
+    "raw_ecg_image": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\AFIB\\example_002951_raw.png",
+    "gradcam_image": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\AFIB\\example_002951_gradcam.png",
+    "gradcam_class": "AFIB"
+  },
+  {
+    "dataset_index": 3558,
+    "record_id": "04908__seg00493",
+    "primary_true_code": "N",
+    "predicted_codes": [
+      "N"
+    ],
+    "json_path": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\N\\example_003558.json",
+    "class_correct": true,
+    "prediction_status": "CORRECT",
+    "raw_ecg_image": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\N\\example_003558_raw.png",
+    "gradcam_image": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\N\\example_003558_gradcam.png",
+    "gradcam_class": "N"
+  },
+  {
+    "dataset_index": 4750,
+    "record_id": "05091__seg00459",
+    "primary_true_code": "N",
+    "predicted_codes": [
+      "N"
+    ],
+    "json_path": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\N\\example_004750.json",
+    "class_correct": true,
+    "prediction_status": "CORRECT",
+    "raw_ecg_image": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\N\\example_004750_raw.png",
+    "gradcam_image": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\N\\example_004750_gradcam.png",
+    "gradcam_class": "N"
+  },
+  {
+    "dataset_index": 4928,
+    "record_id": "05121__seg00024",
+    "primary_true_code": "N",
+    "predicted_codes": [
+      "N"
+    ],
+    "json_path": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\N\\example_004928.json",
+    "class_correct": true,
+    "prediction_status": "CORRECT",
+    "raw_ecg_image": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\N\\example_004928_raw.png",
+    "gradcam_image": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\N\\example_004928_gradcam.png",
+    "gradcam_class": "N"
+  },
+  {
+    "dataset_index": 9434,
+    "record_id": "07879__seg00297",
+    "primary_true_code": "AFIB",
+    "predicted_codes": [
+      "AFIB"
+    ],
+    "json_path": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\AFIB\\example_009434.json",
+    "class_correct": true,
+    "prediction_status": "CORRECT",
+    "raw_ecg_image": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\AFIB\\example_009434_raw.png",
+    "gradcam_image": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\AFIB\\example_009434_gradcam.png",
+    "gradcam_class": "AFIB"
+  },
+  {
+    "dataset_index": 10315,
+    "record_id": "07910__seg00565",
+    "primary_true_code": "AFIB",
+    "predicted_codes": [
+      "AFIB"
+    ],
+    "json_path": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\AFIB\\example_010315.json",
+    "class_correct": true,
+    "prediction_status": "CORRECT",
+    "raw_ecg_image": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\AFIB\\example_010315_raw.png",
+    "gradcam_image": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\AFIB\\example_010315_gradcam.png",
+    "gradcam_class": "AFIB"
+  },
+  {
+    "dataset_index": 12248,
+    "record_id": "08405__seg00046",
+    "primary_true_code": "N",
+    "predicted_codes": [
+      "N"
+    ],
+    "json_path": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\N\\example_012248.json",
+    "class_correct": true,
+    "prediction_status": "CORRECT",
+    "raw_ecg_image": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\N\\example_012248_raw.png",
+    "gradcam_image": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\N\\example_012248_gradcam.png",
+    "gradcam_class": "N"
+  },
+  {
+    "dataset_index": 12467,
+    "record_id": "08405__seg00265",
+    "primary_true_code": "AFIB",
+    "predicted_codes": [
+      "AFIB"
+    ],
+    "json_path": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\AFIB\\example_012467.json",
+    "class_correct": true,
+    "prediction_status": "CORRECT",
+    "raw_ecg_image": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\AFIB\\example_012467_raw.png",
+    "gradcam_image": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\AFIB\\example_012467_gradcam.png",
+    "gradcam_class": "AFIB"
+  },
+  {
+    "dataset_index": 13904,
+    "record_id": "08455__seg00476",
+    "primary_true_code": "AFIB",
+    "predicted_codes": [
+      "AFIB"
+    ],
+    "json_path": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\AFIB\\example_013904.json",
+    "class_correct": true,
+    "prediction_status": "CORRECT",
+    "raw_ecg_image": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\AFIB\\example_013904_raw.png",
+    "gradcam_image": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\AFIB\\example_013904_gradcam.png",
+    "gradcam_class": "AFIB"
+  }
+]

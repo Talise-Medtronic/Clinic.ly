@@ -105,7 +105,7 @@ function AlertBanner() {
       </div>
       <div>
         <div style={{ fontSize: 12, fontWeight: 600, color: "var(--red)", marginBottom: 2 }}>Elevated Blood Pressure Detected</div>
-        <div style={{ fontSize: 11, color: "rgba(239,68,68,0.7)" }}>Reading of 142/91 mmHg at 9:14 AM exceeded your target range. Dr. Halvorsen has been notified.</div>
+        <div style={{ fontSize: 11, color: "rgba(239,68,68,0.7)" }}>Reading of 142/91 mmHg at 9:14 AM exceeded your target range. Dr Doof has been notified.</div>
       </div>
     </div>
   )

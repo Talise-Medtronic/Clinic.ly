@@ -98,6 +98,34 @@ export default function App() {
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div
+              style={{
+                width: 28,
+                height: 28,
+                borderRadius: 6,
+                background: "linear-gradient(145deg, #140f4b 0%, #1010eb 100%)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 8px 16px rgba(20, 15, 75, 0.28)",
+              }}
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M8 2C8 2 3 6 3 10C3 12.76 5.24 15 8 15C10.76 15 13 12.76 13 10C13 6 8 2 8 2Z" fill="white" opacity="0.9" />
+                <path d="M5.5 10H7.5V7H8.5V10H10.5" stroke="white" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+              </svg>
+            </div>
+            <span
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 700,
+                fontSize: 17,
+                color: "var(--navy-fill)",
+                letterSpacing: "0.01em",
+              }}
+            >
+              Clinic.ly
+            </span>
             <span
               style={{
                 fontFamily: "'Avenir Next World', 'Avenir Next', sans-serif",
@@ -105,7 +133,7 @@ export default function App() {
                 color: "#39476f",
               }}
             >
-              Margaret Kowalski &middot; Patient
+              John Smith &middot; Patient
             </span>
           </div>
           <button
@@ -170,6 +198,34 @@ export default function App() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div
+            style={{
+              width: 28,
+              height: 28,
+              borderRadius: 6,
+              background: "linear-gradient(145deg, #140f4b 0%, #1010eb 100%)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0 8px 16px rgba(20, 15, 75, 0.28)",
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M8 2C8 2 3 6 3 10C3 12.76 5.24 15 8 15C10.76 15 13 12.76 13 10C13 6 8 2 8 2Z" fill="white" opacity="0.9" />
+              <path d="M5.5 10H7.5V7H8.5V10H10.5" stroke="white" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+            </svg>
+          </div>
+          <span
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 700,
+              fontSize: 17,
+              color: "var(--navy-fill)",
+              letterSpacing: "0.01em",
+            }}
+          >
+            Clinic.ly
+          </span>
           <button
             onClick={() => setView(view === "patient-portal" ? "patients" : "patient-portal")}
             style={{
@@ -196,7 +252,7 @@ export default function App() {
               color: "var(--text-mid)",
             }}
           >
-            Dr. Geoff Martha &middot; Cardiology
+            Dr Doof &middot; Cardiology
           </div>
 
           <button
@@ -301,7 +357,7 @@ export default function App() {
               }}
             >
               <div style={{ fontFamily: "var(--font-display)", fontSize: 21, color: "var(--navy-fill)", fontWeight: 700 }}>
-                Welcome, Dr. Geoff Martha
+                Welcome, Dr Doof
               </div>
               <div style={{ fontFamily: "var(--font-ui)", fontSize: 13, color: "var(--text-mid)", marginTop: 6 }}>
                 StudySync-style dashboard for remote cardiac device management.

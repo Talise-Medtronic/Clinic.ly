@@ -57,7 +57,7 @@ function Section({ title, children, onEdit }: { title: string; children: React.R
   )
 }
 
-function DeviceStatus({ name, connected, lastSync, battery }: { name: string; connected: boolean; lastSync: string; battery: number }) {
+function DeviceStatus({ name, connected, lastSync }: { name: string; connected: boolean; lastSync: string }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 0", borderBottom: "1px solid var(--border)" }}>
       <div
@@ -82,7 +82,7 @@ function DeviceStatus({ name, connected, lastSync, battery }: { name: string; co
       <div style={{ flex: 1 }}>
         <div style={{ fontSize: 13, fontWeight: 500, color: "var(--text)" }}>{name}</div>
         <div style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--text-muted)", marginTop: 1 }}>
-          {connected ? `Synced ${lastSync}` : "Disconnected"} · Battery {battery}%
+          {connected ? `Checked in ${lastSync}` : "Disconnected"}
         </div>
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
@@ -123,12 +123,12 @@ export default function ProfileTab() {
             color: "#fff",
           }}
         >
-          MK
+          JS
         </div>
         <div>
-          <div style={{ fontSize: 18, fontWeight: 700, color: "var(--text)", letterSpacing: "-0.02em" }}>Margaret Kowalski</div>
-          <div style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--text-muted)", marginTop: 2 }}>Patient ID · CLN-2847-MK</div>
-          <div style={{ fontSize: 11, color: "var(--blue-bright)", marginTop: 3 }}>Under care of Dr. Petra Halvorsen</div>
+          <div style={{ fontSize: 18, fontWeight: 700, color: "var(--text)", letterSpacing: "-0.02em" }}>John Smith</div>
+          <div style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--text-muted)", marginTop: 2 }}>Patient ID · CLN-2847-JS</div>
+          <div style={{ fontSize: 11, color: "var(--blue-bright)", marginTop: 3 }}>Under care of Dr Doof</div>
         </div>
       </div>
 
@@ -139,7 +139,7 @@ export default function ProfileTab() {
         <InfoRow label="Diagnosis" value="CHF — Stage II" />
         <InfoRow label="Blood Type" value="A+" mono />
         <div style={{ paddingTop: 11 }}>
-          <InfoRow label="Primary Physician" value="Dr. Petra Halvorsen" />
+          <InfoRow label="Primary Physician" value="Dr Doof" />
         </div>
       </Section>
 
@@ -150,30 +150,37 @@ export default function ProfileTab() {
         <InfoRow label="SpO₂" value="≥ 95%" mono />
         <InfoRow label="Daily Weight Change" value="< 2 lbs / day" mono />
         <div style={{ paddingTop: 2, fontSize: 11, color: "var(--text-muted)", lineHeight: 1.5 }}>
-          Ranges set by Dr. Halvorsen · Updated Jun 1, 2025
+          Ranges set by Dr Doof · Updated Jun 1, 2025
         </div>
       </Section>
 
       {/* Devices */}
       <Section title="Connected Devices">
         <DeviceStatus
-          name="Medtronic CareLink Monitor"
+          name="Medtronic LINQ II ICM"
           connected={true}
           lastSync="4 min ago"
-          battery={82}
         />
         <DeviceStatus
           name="Withings BPM Connect"
           connected={true}
           lastSync="1 hr ago"
-          battery={67}
         />
         <DeviceStatus
           name="Apple Watch Series 9"
           connected={false}
           lastSync="6 hrs ago"
-          battery={14}
         />
+      </Section>
+
+      <Section title="Battery Life" onEdit={() => handleEditSection("battery") }>
+        <InfoRow label="Primary Monitor" value="Checked in 4 min ago" />
+        <InfoRow label="Blood Pressure Cuff" value="Checked in 1 hr ago" />
+        <InfoRow label="Smart Watch" value="Checked in 6 hrs ago" />
+        <InfoRow label="Estimated Monitor Life" value="~11 months" />
+        <div style={{ paddingTop: 2, fontSize: 11, color: "var(--text-muted)", lineHeight: 1.5 }}>
+          Last check-in summary: Today, 8:52 AM
+        </div>
       </Section>
 
       {/* Medications */}
@@ -215,7 +222,7 @@ export default function ProfileTab() {
         <div style={{ fontFamily: "var(--mono)", fontSize: 9, fontWeight: 700, letterSpacing: "0.10em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 10 }}>
           Emergency Contact
         </div>
-        <div style={{ fontSize: 13, fontWeight: 500, color: "var(--text)" }}>Robert Kowalski (Spouse)</div>
+        <div style={{ fontSize: 13, fontWeight: 500, color: "var(--text)" }}>Jane Doe (Spouse)</div>
         <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--blue-bright)", marginTop: 4 }}>(312) 555-0189</div>
         <button
           style={{
@@ -258,7 +265,7 @@ export default function ProfileTab() {
                 <label style={{ display: "block", fontSize: 11, fontWeight: 600, marginBottom: 6, color: "var(--text-muted)" }}>
                   Primary Physician
                 </label>
-                <input type="text" defaultValue="Dr. Petra Halvorsen" style={{ width: "100%", padding: "10px 12px", border: "1px solid var(--border)", borderRadius: 8, background: "var(--surface)", color: "var(--text)" }} />
+                <input type="text" defaultValue="Dr Doof" style={{ width: "100%", padding: "10px 12px", border: "1px solid var(--border)", borderRadius: 8, background: "var(--surface)", color: "var(--text)" }} />
               </div>
             </div>
           )}
@@ -275,6 +282,22 @@ export default function ProfileTab() {
                   Target Blood Pressure (mmHg)
                 </label>
                 <input type="text" defaultValue="&lt; 130/80" style={{ width: "100%", padding: "10px 12px", border: "1px solid var(--border)", borderRadius: 8, background: "var(--surface)", color: "var(--text)" }} />
+              </div>
+            </div>
+          )}
+          {editingSection === "battery" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              <div>
+                <label style={{ display: "block", fontSize: 11, fontWeight: 600, marginBottom: 6, color: "var(--text-muted)" }}>
+                  Primary Monitor Battery (%)
+                </label>
+                <input type="text" defaultValue="82" style={{ width: "100%", padding: "10px 12px", border: "1px solid var(--border)", borderRadius: 8, background: "var(--surface)", color: "var(--text)" }} />
+              </div>
+              <div>
+                <label style={{ display: "block", fontSize: 11, fontWeight: 600, marginBottom: 6, color: "var(--text-muted)" }}>
+                  Estimated Monitor Life
+                </label>
+                <input type="text" defaultValue="~11 months" style={{ width: "100%", padding: "10px 12px", border: "1px solid var(--border)", borderRadius: 8, background: "var(--surface)", color: "var(--text)" }} />
               </div>
             </div>
           )}

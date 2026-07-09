@@ -1,0 +1,23 @@
+{
+  "dataset_index": 10315,
+  "record_id": "07910__seg00565",
+  "true_codes": [
+    "AFIB"
+  ],
+  "predicted_codes": [
+    "AFIB"
+  ],
+  "probabilities": {
+    "AFIB": 0.5692176818847656,
+    "AFL": 0.3975205719470978,
+    "N": 0.4623706638813019,
+    "OTHER": 0.33997273445129395
+  },
+  "is_predicted_normal_only": false,
+  "threshold": 0.5,
+  "class_correct": true,
+  "prediction_status": "CORRECT",
+  "raw_ecg_image": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\AFIB\\example_010315_raw.png",
+  "gradcam_image": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\AFIB\\example_010315_gradcam.png",
+  "gradcam_class": "AFIB"
+}

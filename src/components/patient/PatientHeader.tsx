@@ -52,7 +52,7 @@ export default function PatientHeader() {
           letterSpacing: "0.04em",
         }}
       >
-        MK
+        JS
       </div>
     </header>
   )
