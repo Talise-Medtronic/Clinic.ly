@@ -208,9 +208,7 @@ export default function App() {
         }}
       >
         {([
-          { key: "home", label: "Home" },
-          { key: "patients", label: "Special Uses" },
-          { key: "administrator", label: "Administrator" },
+          { key: "patients", label: "Doctor Portal" },
         ] as const).map((item) => (
           <button
             key={item.key}
@@ -280,26 +278,6 @@ export default function App() {
           gap: 12,
         }}
       >
-        {!isMobile && (
-          <aside
-            style={{
-              width: 58,
-              border: "1px solid rgba(20, 15, 75, 0.14)",
-              background: "rgba(255,255,255,0.84)",
-              borderRadius: 12,
-              padding: "10px 6px",
-              display: "flex",
-              flexDirection: "column",
-              gap: 8,
-              alignItems: "center",
-            }}
-          >
-            <RailDot active={view === "home"} label="H" />
-            <RailDot active={view === "patients"} label="S" />
-            <RailDot active={view === "administrator"} label="A" />
-          </aside>
-        )}
-
         {view === "home" && (
           <section style={{ flex: 1, overflowY: "auto", padding: 4 }}>
             <div
@@ -368,7 +346,7 @@ export default function App() {
               }}
             >
               <div style={{ fontFamily: "var(--font-display)", fontSize: 17, color: "var(--navy-fill)", fontWeight: 700, marginBottom: 10 }}>
-                Special Uses
+                Doctor Portal
               </div>
               <div
                 style={{
@@ -646,28 +624,6 @@ const toolbarButtonStyle: CSSProperties = {
   fontFamily: "var(--font-ui)",
   fontSize: 12,
   cursor: "pointer",
-}
-
-function RailDot({ active, label }: { active: boolean; label: string }) {
-  return (
-    <div
-      style={{
-        width: 30,
-        height: 30,
-        borderRadius: 8,
-        border: `1px solid ${active ? "rgba(16,16,235,0.5)" : "rgba(20,15,75,0.16)"}`,
-        background: active ? "rgba(16,16,235,0.1)" : "#fff",
-        color: active ? "var(--primary-base)" : "var(--text-subtle)",
-        fontFamily: "var(--font-ui)",
-        fontSize: 12,
-        fontWeight: 700,
-        display: "grid",
-        placeItems: "center",
-      }}
-    >
-      {label}
-    </div>
-  )
 }
 
 function HomeCard({ title, subtitle, accent }: { title: string; subtitle: string; accent: string }) {
