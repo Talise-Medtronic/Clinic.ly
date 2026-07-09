@@ -27,7 +27,7 @@ export default function ManagementCard({ icon, title, description, actions, onAc
       {/* Header with icon */}
       <div
         style={{
-          background: "linear-gradient(135deg, var(--blue) 0%, var(--blue-bright) 100%)",
+          background: "linear-gradient(145deg, #140f4b 0%, #1010eb 100%)",
           padding: "14px 16px",
           display: "flex",
           alignItems: "center",

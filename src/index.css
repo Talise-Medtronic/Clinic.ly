@@ -69,3 +69,48 @@ body,
 #root {
 	font-family: 'Avenir Next World', 'Avenir Next', 'Segoe UI', sans-serif;
 }
+
+/* ── Patient Portal scoped variables (Medtronic-aligned) ── */
+.patient-portal {
+	--bg: #edf2fb;
+	--surface: rgba(255, 255, 255, 0.92);
+	--surface-2: rgba(245, 248, 255, 0.95);
+	--border: rgba(20, 15, 75, 0.12);
+	--border-strong: rgba(20, 15, 75, 0.2);
+	--text: #1a1f31;
+	--text-muted: rgba(53, 68, 105, 0.62);
+	--text-sub: #39476f;
+	--blue: #1010eb;
+	--blue-bright: #0c0ca5;
+	--cyan: #0c0ca5;
+	--green: #008b5d;
+	--amber: #cb8a00;
+	--red: #cd0025;
+	--mono: 'Avenir Next World', 'Avenir Next', 'Segoe UI', monospace;
+	--sans: 'Avenir Next World', 'Avenir Next', 'Segoe UI', sans-serif;
+
+	font-family: var(--sans);
+	color: var(--text);
+	background: var(--bg);
+}
+
+@keyframes pulse-ring {
+	0%, 100% { opacity: 1; transform: scale(1); }
+	50% { opacity: 0.5; transform: scale(1.08); }
+}
+
+@keyframes slide-up {
+	from { opacity: 0; transform: translateY(12px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-slide-up {
+	animation: slide-up 0.25s ease both;
+}
+
+@keyframes blink {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0; }
+}
+
+.blink { animation: blink 1.2s step-start infinite; }

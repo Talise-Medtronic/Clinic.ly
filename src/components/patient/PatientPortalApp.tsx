@@ -1,9 +1,9 @@
 import { useState } from "react"
-import PatientHeader from "./components/PatientHeader"
-import HomeTab from "./components/HomeTab"
-import TrendsTab from "./components/TrendsTab"
-import LogTab from "./components/LogTab"
-import ProfileTab from "./components/ProfileTab"
+import PatientHeader from "./PatientHeader"
+import HomeTab from "./HomeTab"
+import TrendsTab from "./TrendsTab"
+import LogTab from "./LogTab"
+import ProfileTab from "./ProfileTab"
 
 type Tab = "home" | "trends" | "log" | "profile"
 
@@ -50,28 +50,27 @@ const NAV: { id: Tab; label: string; icon: React.ReactNode }[] = [
   },
 ]
 
-export default function App() {
+export default function PatientPortalApp({ onBack }: { onBack: () => void }) {
   const [tab, setTab] = useState<Tab>("home")
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100dvh", maxWidth: 430, margin: "0 auto", background: "var(--bg)", position: "relative" }}>
-      <PatientHeader />
-
-      <div style={{ flex: 1, overflowY: "auto", overflowX: "hidden" }} className="animate-slide-up">
-        {tab === "home" && <HomeTab />}
-        {tab === "trends" && <TrendsTab />}
-        {tab === "log" && <LogTab />}
-        {tab === "profile" && <ProfileTab />}
-      </div>
-
+    <div
+      className="patient-portal"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        height: "calc(100dvh - 66px)",
+        background: "linear-gradient(180deg, #f4f7ff 0%, #ebf1fc 100%)",
+      }}
+    >
+      {/* Horizontal tab bar at top */}
       <nav
         style={{
           flexShrink: 0,
           display: "flex",
-          borderTop: "1px solid var(--border)",
-          background: "rgba(248,250,252,0.97)",
+          borderBottom: "1px solid rgba(20, 15, 75, 0.14)",
+          background: "rgba(255, 255, 255, 0.95)",
           backdropFilter: "blur(12px)",
-          paddingBottom: "env(safe-area-inset-bottom, 0px)",
         }}
       >
         {NAV.map((n) => {
@@ -89,18 +88,27 @@ export default function App() {
                 padding: "10px 0 8px",
                 background: "none",
                 border: "none",
-                color: active ? "var(--blue-bright)" : "var(--text-muted)",
-                transition: "color 0.15s",
+                borderBottom: active ? "2px solid #1010eb" : "2px solid transparent",
+                color: active ? "#1010eb" : "rgba(53, 68, 105, 0.55)",
+                transition: "color 0.15s, border-color 0.15s",
+                cursor: "pointer",
               }}
             >
               {n.icon}
-              <span style={{ fontFamily: "var(--sans)", fontSize: 10, fontWeight: active ? 600 : 400, letterSpacing: "0.04em" }}>
+              <span style={{ fontFamily: "var(--sans)", fontSize: 10, fontWeight: active ? 700 : 400, letterSpacing: "0.04em" }}>
                 {n.label}
               </span>
             </button>
           )
         })}
       </nav>
+
+      <div style={{ flex: 1, overflowY: "auto", overflowX: "hidden" }} className="animate-slide-up">
+        {tab === "home" && <HomeTab />}
+        {tab === "trends" && <TrendsTab />}
+        {tab === "log" && <LogTab />}
+        {tab === "profile" && <ProfileTab />}
+      </div>
     </div>
   )
 }

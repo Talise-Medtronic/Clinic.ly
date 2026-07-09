@@ -1,9 +1,10 @@
 import { useState, useEffect, useMemo, type CSSProperties } from "react"
 import { patients } from "./data/patients"
 import PatientDetail from "./components/PatientDetail"
+import PatientPortalApp from "./components/patient/PatientPortalApp"
 
 const sorted = [...patients].sort((a, b) => b.alertLevel - a.alertLevel)
-type AppView = "home" | "patients" | "administrator"
+type AppView = "home" | "patients" | "administrator" | "patient-portal"
 type AlertFilter = "all" | "critical" | "high" | "moderate" | "stable"
 type ScoreFilter = "all" | 10 | 9 | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1
 type WarningSourceFilter = "all" | "heart" | "device"
@@ -76,6 +77,61 @@ export default function App() {
     return `${life.value}${life.unit ? ` ${life.unit}` : ""}`
   }
 
+  if (view === "patient-portal") {
+    return (
+      <>
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            zIndex: 50,
+            height: 66,
+            background: "rgba(255,255,255,0.9)",
+            borderBottom: "1px solid rgba(20,15,75,0.18)",
+            backdropFilter: "blur(8px)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "0 22px",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <span
+              style={{
+                fontFamily: "'Avenir Next World', 'Avenir Next', sans-serif",
+                fontSize: 12,
+                color: "#39476f",
+              }}
+            >
+              Margaret Kowalski &middot; Patient
+            </span>
+          </div>
+          <button
+            onClick={() => setView("patients")}
+            style={{
+              border: "1px solid rgba(0, 79, 154, 0.22)",
+              background: "rgba(255,255,255,0.9)",
+              color: "#39476f",
+              borderRadius: 8,
+              padding: "5px 10px",
+              fontFamily: "'Avenir Next World', 'Avenir Next', sans-serif",
+              fontSize: 11,
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            Doctor Portal
+          </button>
+        </div>
+        <div style={{ paddingTop: 66 }}>
+          <PatientPortalApp onBack={() => setView("patients")} />
+        </div>
+      </>
+    )
+  }
+
   return (
     <div
       style={{
@@ -114,34 +170,22 @@ export default function App() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div
+          <button
+            onClick={() => setView(view === "patient-portal" ? "patients" : "patient-portal")}
             style={{
-              width: 28,
-              height: 28,
-              borderRadius: 6,
-              background: "linear-gradient(145deg, #140f4b 0%, #1010eb 100%)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              boxShadow: "0 8px 16px rgba(20, 15, 75, 0.28)",
+              border: "1px solid rgba(0, 79, 154, 0.22)",
+              background: "rgba(255,255,255,0.9)",
+              color: "var(--text-mid)",
+              borderRadius: 8,
+              padding: "5px 10px",
+              fontFamily: "var(--font-ui)",
+              fontSize: 11,
+              fontWeight: 600,
+              cursor: "pointer",
             }}
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M8 2C8 2 3 6 3 10C3 12.76 5.24 15 8 15C10.76 15 13 12.76 13 10C13 6 8 2 8 2Z" fill="white" opacity="0.9" />
-              <path d="M5.5 10H7.5V7H8.5V10H10.5" stroke="white" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-            </svg>
-          </div>
-          <span
-            style={{
-              fontFamily: "var(--font-display)",
-              fontWeight: 700,
-              fontSize: 17,
-              color: "var(--navy-fill)",
-              letterSpacing: "0.01em",
-            }}
-          >
-            Clinic.ly
-          </span>
+            Patient Portal
+          </button>
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: 10, position: "relative" }}>
@@ -152,7 +196,7 @@ export default function App() {
               color: "var(--text-mid)",
             }}
           >
-            Dr. Geoff Martha · Cardiology
+            Dr. Geoff Martha &middot; Cardiology
           </div>
 
           <button
