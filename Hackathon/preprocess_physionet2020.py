@@ -62,6 +62,33 @@ def download_and_extract_challenge(download_dir: Path, version: str) -> Path:
     raise FileNotFoundError("Could not locate extracted training directory after download")
 
 
+def download_and_extract_afdb(download_dir: Path, version: str) -> Path:
+    download_dir.mkdir(parents=True, exist_ok=True)
+    zip_path = download_dir / f"afdb-{version}.zip"
+    extracted_root = download_dir / f"afdb-{version}"
+
+    if extracted_root.exists():
+        return extracted_root
+
+    url = f"https://physionet.org/content/afdb/get-zip/{version}/"
+    if not zip_path.exists():
+        print(f"Downloading MIT-BIH AFDB ZIP from: {url}")
+        urlretrieve(url, str(zip_path))
+
+    print(f"Extracting ZIP to: {download_dir}")
+    with zipfile.ZipFile(zip_path, "r") as zf:
+        zf.extractall(download_dir)
+
+    if extracted_root.exists():
+        return extracted_root
+
+    found = [p for p in download_dir.iterdir() if p.is_dir() and p.name.lower().startswith("afdb")]
+    if found:
+        return found[0]
+
+    raise FileNotFoundError("Could not locate extracted AFDB directory after download")
+
+
 def group_id_from_record_id(record_id: str) -> str:
     base = Path(record_id).name
     return base.split("__seg")[0]
@@ -83,12 +110,65 @@ def pick_lead(record: wfdb.Record, requested_lead: str) -> Tuple[np.ndarray, str
     return signal[:, 0], "unknown"
 
 
+def normalize_afdb_rhythm_label(aux_note: str) -> str | None:
+    t = (aux_note or "").strip().upper().replace("\x00", "")
+    if not t:
+        return None
+    if t.startswith("("):
+        t = t[1:]
+    if "AFIB" in t:
+        return "AFIB"
+    if "AFL" in t:
+        return "AFL"
+    if t in {"N", "NSR"}:
+        return "N"
+    if "N" == t[:1] and len(t) <= 2:
+        return "N"
+    return "OTHER"
+
+
+def build_afdb_rhythm_intervals(record_path: Path, signal_len: int) -> List[Tuple[int, int, str]]:
+    ann = wfdb.rdann(str(record_path), "atr")
+    starts: List[int] = []
+    labels: List[str] = []
+    for sample, aux in zip(ann.sample.tolist(), ann.aux_note):
+        label = normalize_afdb_rhythm_label(aux)
+        if label is not None:
+            starts.append(int(sample))
+            labels.append(label)
+
+    if not starts:
+        return [(0, signal_len, "OTHER")]
+
+    intervals: List[Tuple[int, int, str]] = []
+    if starts[0] > 0:
+        intervals.append((0, starts[0], labels[0]))
+
+    for i, start in enumerate(starts):
+        end = starts[i + 1] if i + 1 < len(starts) else signal_len
+        intervals.append((start, max(start + 1, end), labels[i]))
+
+    return intervals
+
+
+def dominant_label_for_window(start: int, end: int, intervals: List[Tuple[int, int, str]]) -> str:
+    counts: Counter[str] = Counter()
+    for int_start, int_end, label in intervals:
+        overlap = max(0, min(end, int_end) - max(start, int_start))
+        if overlap > 0:
+            counts[label] += overlap
+    if not counts:
+        return "OTHER"
+    return counts.most_common(1)[0][0]
+
+
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Preprocess PhysioNet Challenge 2020 ECG records")
-    parser.add_argument("--data-root", help="Root folder containing Challenge 2020 training records")
-    parser.add_argument("--auto-download", action="store_true", help="Download and extract Challenge 2020 before preprocessing")
+    parser = argparse.ArgumentParser(description="Preprocess ECG records into fixed 60s single-lead segments")
+    parser.add_argument("--dataset", choices=["challenge2020", "mitbih-afdb"], default="challenge2020")
+    parser.add_argument("--data-root", help="Root folder containing source records")
+    parser.add_argument("--auto-download", action="store_true", help="Download and extract selected dataset before preprocessing")
     parser.add_argument("--download-dir", default="raw", help="Where to store downloaded/extracted Challenge files")
-    parser.add_argument("--physionet-version", default="1.0.2", help="Challenge dataset version")
+    parser.add_argument("--physionet-version", default="1.0.2", help="Dataset version")
     parser.add_argument("--output-dir", default="processed", help="Output directory for preprocessed arrays")
     parser.add_argument("--lead", default="II", help="Desired lead name; falls back to first available lead")
     parser.add_argument("--segment-seconds", type=int, default=60, help="Segment length in seconds")
@@ -98,8 +178,13 @@ def main() -> None:
     parser.add_argument("--debug-samples", type=int, default=5, help="How many sample rows to print")
     args = parser.parse_args()
 
-    if args.auto_download:
+    if args.dataset == "mitbih-afdb" and args.physionet_version == "1.0.2":
+        args.physionet_version = "1.0.0"
+
+    if args.auto_download and args.dataset == "challenge2020":
         data_root = download_and_extract_challenge(Path(args.download_dir).resolve(), args.physionet_version)
+    elif args.auto_download and args.dataset == "mitbih-afdb":
+        data_root = download_and_extract_afdb(Path(args.download_dir).resolve(), args.physionet_version)
     elif args.data_root:
         data_root = Path(args.data_root).resolve()
     else:
@@ -118,7 +203,7 @@ def main() -> None:
     record_ids = []
     used_leads = []
 
-    print(f"Found {len(records)} records. Starting preprocessing...")
+    print(f"Found {len(records)} records for dataset={args.dataset}. Starting preprocessing...")
 
     skipped = 0
     for idx, record_path in enumerate(records, start=1):
@@ -126,22 +211,56 @@ def main() -> None:
             record = wfdb.rdrecord(str(record_path))
             signal_1d, actual_lead = pick_lead(record, args.lead)
             fs = float(record.fs)
-            dx_codes = clean_dx_codes(parse_dx_codes(record.comments or []))
+            if args.dataset == "challenge2020":
+                dx_codes = clean_dx_codes(parse_dx_codes(record.comments or []))
 
-            proc = resample_signal(signal_1d.astype(np.float32), fs, args.target_fs)
-            proc = ensure_fixed_length(proc, target_samples)
-            proc = zscore(proc)
+                proc = resample_signal(signal_1d.astype(np.float32), fs, args.target_fs)
+                proc = ensure_fixed_length(proc, target_samples)
+                proc = zscore(proc)
 
-            X.append(proc)
-            dx_lists.append(dx_codes)
-            record_ids.append(str(record_path.relative_to(data_root)).replace("\\", "/"))
-            used_leads.append(actual_lead)
+                X.append(proc)
+                dx_lists.append(dx_codes)
+                record_ids.append(str(record_path.relative_to(data_root)).replace("\\", "/"))
+                used_leads.append(actual_lead)
 
-            if idx <= args.debug_samples:
-                print(
-                    f"[debug] record={record_ids[-1]} lead={actual_lead} fs={fs:.1f} "
-                    f"dx_codes={dx_codes} first10={np.round(proc[:10], 4).tolist()}"
-                )
+                if idx <= args.debug_samples:
+                    print(
+                        f"[debug] record={record_ids[-1]} lead={actual_lead} fs={fs:.1f} "
+                        f"dx_codes={dx_codes} first10={np.round(proc[:10], 4).tolist()}"
+                    )
+            else:
+                intervals = build_afdb_rhythm_intervals(record_path, signal_1d.shape[0])
+                seg_len_raw = int(round(args.segment_seconds * fs))
+                if seg_len_raw <= 0:
+                    raise ValueError("segment length must be > 0")
+
+                seg_count = 0
+                for seg_idx, start in enumerate(range(0, signal_1d.shape[0] - seg_len_raw + 1, seg_len_raw)):
+                    end = start + seg_len_raw
+                    raw_seg = signal_1d[start:end].astype(np.float32)
+                    label = dominant_label_for_window(start, end, intervals)
+
+                    proc = resample_signal(raw_seg, fs, args.target_fs)
+                    proc = ensure_fixed_length(proc, target_samples)
+                    proc = zscore(proc)
+
+                    rel = str(record_path.relative_to(data_root)).replace("\\", "/")
+                    seg_record_id = f"{rel}__seg{seg_idx:05d}"
+                    X.append(proc)
+                    dx_lists.append([label])
+                    record_ids.append(seg_record_id)
+                    used_leads.append(actual_lead)
+                    seg_count += 1
+
+                    if len(X) <= args.debug_samples:
+                        print(
+                            f"[debug] record={seg_record_id} lead={actual_lead} fs={fs:.1f} "
+                            f"label={label} first10={np.round(proc[:10], 4).tolist()}"
+                        )
+
+                if seg_count == 0:
+                    skipped += 1
+                    print(f"[warn] skipped {record_path}: record shorter than one segment ({seg_len_raw} samples)")
         except Exception as exc:  # noqa: BLE001
             skipped += 1
             print(f"[warn] skipped {record_path}: {exc}")
@@ -194,6 +313,7 @@ def main() -> None:
         "segment_seconds": args.segment_seconds,
         "segment_samples": target_samples,
         "requested_lead": args.lead,
+        "dataset": args.dataset,
         "data_root": str(data_root),
         "num_samples": int(X_arr.shape[0]),
         "num_classes": int(len(class_codes)),

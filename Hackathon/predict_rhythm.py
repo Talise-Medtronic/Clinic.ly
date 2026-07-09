@@ -9,6 +9,8 @@ import numpy as np
 import torch
 import wfdb
 
+from ecg_pipeline.explainability import compute_gradcam_1d, compute_input_saliency, save_saliency_plot
+from ecg_pipeline.labels import NORMAL_SINUS_CODE
 from ecg_pipeline.model import SingleLeadCNN
 from ecg_pipeline.signal_utils import ensure_fixed_length, resample_signal, zscore
 
@@ -53,6 +55,17 @@ def main() -> None:
     parser.add_argument("--lead", default="II", help="Lead to use for WFDB input")
     parser.add_argument("--source-fs", type=float, default=250.0, help="Source sampling rate for CSV/NPY")
     parser.add_argument("--threshold", type=float, default=0.5, help="Sigmoid threshold for positive labels")
+    parser.add_argument(
+        "--explain-method",
+        choices=["saliency", "gradcam", "both"],
+        default="both",
+        help="Explainability method for non-normal predictions",
+    )
+    parser.add_argument(
+        "--explain-dir",
+        default="outputs/explanations",
+        help="Directory for explainability maps (generated only for predicted non-normal classes)",
+    )
     parser.add_argument("--json-out", help="Optional output path for JSON result")
     args = parser.parse_args()
 
@@ -102,10 +115,46 @@ def main() -> None:
         active_indices = [int(np.argmax(probs))]
 
     predicted_codes = [class_codes[i] for i in active_indices]
+
+    explain_items = []
+    abnormal_indices = [i for i in active_indices if class_codes[i] != NORMAL_SINUS_CODE]
+    if abnormal_indices:
+        explain_dir = Path(args.explain_dir).resolve()
+        source_slug = source_desc.replace(":", "_").replace("/", "_").replace("\\", "_")
+        for class_idx in abnormal_indices:
+            code = class_codes[class_idx]
+            desc = class_descriptions.get(code, "")
+            if args.explain_method in {"saliency", "both"}:
+                saliency = compute_input_saliency(model, x, class_idx)
+                saliency_path = explain_dir / f"saliency_{source_slug}_{code}.png"
+                save_saliency_plot(proc, saliency, saliency_path, f"Saliency map for code {code} ({desc})")
+                explain_items.append(
+                    {
+                        "class_code": code,
+                        "method": "saliency",
+                        "path": str(saliency_path),
+                    }
+                )
+
+            if args.explain_method in {"gradcam", "both"}:
+                gradcam = compute_gradcam_1d(model, x, class_idx)
+                gradcam_path = explain_dir / f"gradcam_{source_slug}_{code}.png"
+                save_saliency_plot(proc, gradcam, gradcam_path, f"Grad-CAM for code {code} ({desc})")
+                explain_items.append(
+                    {
+                        "class_code": code,
+                        "method": "gradcam",
+                        "path": str(gradcam_path),
+                    }
+                )
+
     result = {
         "predicted_codes": predicted_codes,
         "predicted_descriptions": [class_descriptions.get(code, "") for code in predicted_codes],
         "probabilities": {class_codes[i]: float(probs[i]) for i in range(len(class_codes))},
+        "explainability_method": args.explain_method,
+        "explainability_images": [item["path"] for item in explain_items],
+        "explainability_details": explain_items,
         "threshold": float(args.threshold),
         "target_fs": target_fs,
         "segment_seconds": segment_seconds,

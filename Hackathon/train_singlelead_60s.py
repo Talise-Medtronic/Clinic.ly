@@ -12,7 +12,7 @@ from sklearn.model_selection import GroupShuffleSplit
 from torch import nn
 from torch.utils.data import DataLoader, Dataset
 
-from ecg_pipeline.labels import NORMAL_SINUS_CODE
+from ecg_pipeline.labels import find_normal_class_index
 from ecg_pipeline.model import SingleLeadCNN
 
 
@@ -152,7 +152,7 @@ def main() -> None:
     if not class_codes:
         class_codes = [f"class_{i}" for i in range(y.shape[1])]
 
-    normal_idx = class_codes.index(NORMAL_SINUS_CODE) if NORMAL_SINUS_CODE in class_codes else None
+    normal_idx = find_normal_class_index(class_codes)
 
     print(f"Loaded X shape={X.shape}, y shape={y.shape}")
     print(f"Sample labels (first row, active class idx): {np.where(y[0] > 0.5)[0].tolist()}")

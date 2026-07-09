@@ -1,13 +1,11 @@
 """Utilities for single-lead ECG preprocessing, training, and inference."""
 
-from .labels import CLASS_NAMES, label_to_index, index_to_label
+from .labels import find_normal_class_index
 from .model import SingleLeadCNN
 from .signal_utils import ensure_fixed_length, resample_signal
 
 __all__ = [
-    "CLASS_NAMES",
-    "label_to_index",
-    "index_to_label",
+    "find_normal_class_index",
     "SingleLeadCNN",
     "ensure_fixed_length",
     "resample_signal",
