@@ -1,0 +1,18 @@
+{
+  "dataset_index": 4442,
+  "record_id": "05091__seg00151",
+  "true_codes": [
+    "N"
+  ],
+  "predicted_codes": [
+    "N"
+  ],
+  "probabilities": {
+    "AFIB": 0.4650314152240753,
+    "AFL": 0.3761475384235382,
+    "N": 0.48415884375572205,
+    "OTHER": 0.34138551354408264
+  },
+  "is_predicted_normal_only": true,
+  "threshold": 0.5
+}

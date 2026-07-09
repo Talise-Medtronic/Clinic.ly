@@ -1,0 +1,18 @@
+{
+  "model_path": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\artifacts\\singlelead_cnn.pt",
+  "dataset_path": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\processed\\dataset_singlelead_60s.npz",
+  "num_selected_unique_examples": 94,
+  "per_class_target": 30,
+  "per_class_selected": {
+    "AFIB": 30,
+    "AFL": 30,
+    "N": 30,
+    "OTHER": 4
+  },
+  "classes": [
+    "AFIB",
+    "AFL",
+    "N",
+    "OTHER"
+  ]
+}

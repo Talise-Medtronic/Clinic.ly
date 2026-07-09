@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Dict, Iterable, List, Sequence
 
 NORMAL_SINUS_CODE = "426783006"
+NORMAL_CLASS_ALIASES = {"426783006", "NSR", "N", "(N", "NORMAL"}
 
 # Official scored classes from the PhysioNet/CinC Challenge 2020 evaluation metric.
 # Each tuple is (snomed_code, abbreviation, description).
@@ -77,7 +78,13 @@ def discover_class_codes(dx_code_lists: Sequence[Sequence[str]]) -> List[str]:
 
 def build_class_descriptions(class_codes: Sequence[str]) -> Dict[str, str]:
     by_code = {canonicalize_code(code): desc for code, _, desc in SCORED_CLASS_INFO}
-    return {code: by_code.get(code, "unmapped diagnosis") for code in class_codes}
+    fallback = {
+        "N": "normal rhythm",
+        "AFIB": "atrial fibrillation",
+        "AFL": "atrial flutter",
+        "OTHER": "other rhythm",
+    }
+    return {code: by_code.get(code, fallback.get(code, "unmapped diagnosis")) for code in class_codes}
 
 
 def multi_hot_from_codes(dx_codes: Sequence[str], class_codes: Sequence[str]) -> List[float]:
@@ -89,3 +96,12 @@ def multi_hot_from_codes(dx_codes: Sequence[str], class_codes: Sequence[str]) ->
         if idx is not None:
             vec[idx] = 1.0
     return vec
+
+
+def find_normal_class_index(class_codes: Sequence[str]) -> int | None:
+    normalized = [str(c).strip().upper() for c in class_codes]
+    aliases = {x.upper() for x in NORMAL_CLASS_ALIASES}
+    for i, code in enumerate(normalized):
+        if code in aliases:
+            return i
+    return None

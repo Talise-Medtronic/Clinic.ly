@@ -1,0 +1,23 @@
+{
+  "dataset_index": 1418,
+  "record_id": "04048__seg00192",
+  "true_codes": [
+    "N"
+  ],
+  "predicted_codes": [
+    "N"
+  ],
+  "probabilities": {
+    "AFIB": 0.45851564407348633,
+    "AFL": 0.3844081163406372,
+    "N": 0.4750070869922638,
+    "OTHER": 0.34213075041770935
+  },
+  "is_predicted_normal_only": true,
+  "threshold": 0.5,
+  "class_correct": true,
+  "prediction_status": "CORRECT",
+  "raw_ecg_image": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\N\\example_001418_raw.png",
+  "gradcam_image": "C:\\Users\\barabs1\\Desktop\\Clinic.ly\\Hackathon\\demo_outputs_correct\\N\\example_001418_gradcam.png",
+  "gradcam_class": "N"
+}
