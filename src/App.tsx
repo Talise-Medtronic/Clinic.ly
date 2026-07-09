@@ -6,6 +6,7 @@ const sorted = [...patients].sort((a, b) => b.alertLevel - a.alertLevel)
 type AppView = "home" | "patients" | "administrator"
 type AlertFilter = "all" | "critical" | "high" | "moderate" | "stable"
 type ScoreFilter = "all" | 10 | 9 | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1
+type WarningSourceFilter = "all" | "heart" | "device"
 
 export default function App() {
   const [selectedId, setSelectedId] = useState<string>(sorted[0].id)
@@ -15,6 +16,7 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState("")
   const [showFilters, setShowFilters] = useState(false)
   const [alertFilter, setAlertFilter] = useState<AlertFilter>("all")
+  const [warningSourceFilter, setWarningSourceFilter] = useState<WarningSourceFilter>("all")
   const [scoreFilter, setScoreFilter] = useState<ScoreFilter>("all")
   const [doctorMenuOpen, setDoctorMenuOpen] = useState(false)
   const [clinicalNotesById, setClinicalNotesById] = useState<Record<string, string>>(() =>
@@ -37,6 +39,7 @@ export default function App() {
   const filteredSorted = useMemo(() => {
     const q = searchQuery.trim().toLowerCase()
     return sorted.filter((p) => {
+      const source = warningSource(p)
       if (
         (alertFilter === "critical" && p.alertLevel < 9) ||
         (alertFilter === "high" && (p.alertLevel < 7 || p.alertLevel > 8)) ||
@@ -45,6 +48,7 @@ export default function App() {
       ) {
         return false
       }
+      if (warningSourceFilter !== "all" && source !== warningSourceFilter) return false
       if (scoreFilter !== "all" && p.alertLevel !== scoreFilter) return false
       if (!q) return true
       return (
@@ -54,7 +58,7 @@ export default function App() {
         p.deviceId.toLowerCase().includes(q)
       )
     })
-  }, [searchQuery, alertFilter, scoreFilter])
+  }, [searchQuery, alertFilter, warningSourceFilter, scoreFilter])
 
   function handleSelect(id: string) {
     setSelectedId(id)
@@ -403,7 +407,32 @@ export default function App() {
               {showFilters && (
                 <div style={{ marginTop: 10, border: "1px solid rgba(20, 15, 75, 0.14)", borderRadius: 10, padding: 10, background: "rgba(245,248,255,0.95)" }}>
                   <div style={{ fontFamily: "var(--font-ui)", fontSize: 11, fontWeight: 600, color: "var(--text-mid)", marginBottom: 6 }}>
-                    Type Selection
+                    Warning Source
+                  </div>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 8 }}>
+                    {(["all", "heart", "device"] as const).map((item) => (
+                      <button
+                        key={item}
+                        onClick={() => setWarningSourceFilter(item)}
+                        style={{
+                          border: "1px solid rgba(20, 15, 75, 0.18)",
+                          background: warningSourceFilter === item ? "rgba(16, 16, 235, 0.12)" : "#fff",
+                          color: warningSourceFilter === item ? "var(--primary-base)" : "var(--text-mid)",
+                          borderRadius: 999,
+                          padding: "5px 10px",
+                          fontFamily: "var(--font-ui)",
+                          fontSize: 11,
+                          cursor: "pointer",
+                          textTransform: item === "all" ? "capitalize" : "none",
+                        }}
+                      >
+                        {item === "heart" ? "♥" : item === "device" ? "⚙" : "all"}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div style={{ fontFamily: "var(--font-ui)", fontSize: 11, fontWeight: 600, color: "var(--text-mid)", marginBottom: 6 }}>
+                    Warning Level
                   </div>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 8 }}>
                     {(["all", "critical", "high", "moderate", "stable"] as const).map((item) => (
@@ -459,6 +488,7 @@ export default function App() {
                       style={toolbarButtonStyle}
                       onClick={() => {
                         setAlertFilter("all")
+                        setWarningSourceFilter("all")
                         setScoreFilter("all")
                         setSearchQuery("")
                       }}
@@ -488,7 +518,7 @@ export default function App() {
                   >
                     <div style={{ display: "grid", gridTemplateColumns: "1.3fr 0.8fr 0.8fr 0.6fr", padding: "10px 10px", alignItems: "center", gap: 8, textAlign: "left" }}>
                       <div style={{ fontFamily: "var(--font-ui)", fontSize: 12, color: "var(--text-strong)", fontWeight: 600 }}>{p.name}</div>
-                      <div style={{ fontFamily: "var(--font-ui)", fontSize: 11, color: "var(--text-mid)" }}>{severity(p.alertLevel)}</div>
+                      <WarningTypeCell patient={p} />
                       <div style={{ fontFamily: "var(--font-ui)", fontSize: 11, color: "var(--text-mid)" }}>{batteryLife(p.id)}</div>
                       <div style={{ display: "flex", justifyContent: "flex-end" }}>
                         <span
@@ -698,6 +728,41 @@ function TableHeaderCell({ label, align = "left" }: { label: string; align?: "le
       {label}
     </div>
   )
+}
+
+function WarningTypeCell({ patient }: { patient: (typeof patients)[number] }) {
+  const source = warningSource(patient)
+  const sourceSymbol = source === "heart" ? "♥" : "⚙"
+  const detail = warningSubtype(patient)
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 1 }}>
+      <div style={{ fontFamily: "var(--font-ui)", fontSize: 11, color: "var(--text-mid)", fontWeight: 600 }}>
+        {sourceSymbol} - {severity(patient.alertLevel)}
+      </div>
+      <div style={{ fontFamily: "var(--font-ui)", fontSize: 10, color: "var(--text-subtle)" }}>{detail}</div>
+    </div>
+  )
+}
+
+function warningSource(patient: (typeof patients)[number]): "heart" | "device" {
+  const text = `${patient.alertTitle} ${patient.alertDescription}`.toLowerCase()
+  const heartSignals = ["af", "atrial", "ventricular", "vt", "tachy", "arrhythm", "rhythm"]
+  if (heartSignals.some((k) => text.includes(k))) return "heart"
+  return "device"
+}
+
+function warningSubtype(patient: (typeof patients)[number]): string {
+  const text = `${patient.alertTitle} ${patient.alertDescription}`.toLowerCase()
+  if (warningSource(patient) === "heart") {
+    if (text.includes("af")) return "Atrial fibrillation"
+    if (text.includes("vt") || text.includes("ventricular")) return "Ventricular rhythm"
+    return "Rhythm event"
+  }
+  if (text.includes("battery")) return "Battery"
+  if (text.includes("impedance") || text.includes("lead")) return "Lead and impedance"
+  if (text.includes("sensing") || text.includes("threshold") || text.includes("amplitude")) return "Sensing and readings"
+  return "Device telemetry"
 }
 
 function severity(level: number): string {

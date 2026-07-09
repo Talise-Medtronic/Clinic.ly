@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react"
 import type { Patient } from "../data/patients"
 import {
   getVitals,
@@ -31,6 +32,14 @@ function alertLabel(level: number): string {
 export default function PatientDetail({ patient, onClinicalNotesChange }: Props) {
   const color = alertColor(patient.alertLevel)
   const isCritical = patient.alertLevel >= 9
+  const isAbnormalRhythm = hasAbnormalRhythm(patient)
+  const eventTimeLabel = useMemo(() => getEventTimeLabel(patient), [patient])
+  const [confirmedByPatientId, setConfirmedByPatientId] = useState<Record<string, boolean>>({})
+  const isConfirmed = !!confirmedByPatientId[patient.id]
+
+  function toggleEventConfirmation() {
+    setConfirmedByPatientId((prev) => ({ ...prev, [patient.id]: !prev[patient.id] }))
+  }
 
   return (
     <div
@@ -155,6 +164,56 @@ export default function PatientDetail({ patient, onClinicalNotesChange }: Props)
         <Row label="Device ID" value={patient.deviceId} mono />
         <Row label="Implant Date" value={patient.implantDate} mono />
       </SectionCard>
+
+      {isAbnormalRhythm && (
+        <SectionCard title="ECG Event Snapshot" actions={<CardActions labels={[isConfirmed ? "Confirmed" : "Needs Review"]} />}>
+          <div
+            style={{
+              background: "rgba(255,255,255,0.74)",
+              borderRadius: 10,
+              border: "1px solid rgba(0, 79, 154, 0.16)",
+              overflow: "hidden",
+              boxShadow: "0 6px 14px rgba(0, 57, 107, 0.06)",
+            }}
+          >
+            <EcgSnapshot level={patient.alertLevel} />
+          </div>
+
+          <div style={{ marginTop: 10, display: "grid", gap: 6 }}>
+            <Row label="Detected Event" value={patient.alertTitle} />
+            <Row label="Snapshot Time" value={eventTimeLabel} />
+            <Row label="Status" value={isConfirmed ? "Doctor Confirmed" : "Awaiting Doctor Confirmation"} />
+          </div>
+
+          <div style={{ marginTop: 10, display: "flex", alignItems: "center", gap: 8 }}>
+            <button
+              onClick={toggleEventConfirmation}
+              style={{
+                border: "1px solid rgba(20, 15, 75, 0.2)",
+                borderRadius: 8,
+                background: isConfirmed ? "rgba(0, 139, 93, 0.14)" : "#fff",
+                color: isConfirmed ? "var(--ok)" : "var(--text-mid)",
+                fontFamily: "var(--font-ui)",
+                fontSize: 12,
+                fontWeight: 600,
+                padding: "6px 10px",
+                cursor: "pointer",
+              }}
+            >
+              {isConfirmed ? "Unconfirm Event" : "Confirm Event"}
+            </button>
+            <span
+              style={{
+                fontFamily: "var(--font-ui)",
+                fontSize: 12,
+                color: isConfirmed ? "var(--ok)" : "var(--warning)",
+              }}
+            >
+              {isConfirmed ? "Event review complete" : "Doctor action requested"}
+            </span>
+          </div>
+        </SectionCard>
+      )}
 
       <SectionCard title="Content" actions={<CardActions labels={["Add"]} />}>
         <div
@@ -510,6 +569,37 @@ function VitalCard({ series }: { series: VitalSeries }) {
 
       <Sparkline series={series} />
     </div>
+  )
+}
+
+function hasAbnormalRhythm(patient: Patient): boolean {
+  const text = `${patient.alertTitle} ${patient.alertDescription}`.toLowerCase()
+  return patient.alertLevel >= 7 || /(af|vf|vt|arrhythm|tachy|brady|rhythm)/.test(text)
+}
+
+function getEventTimeLabel(patient: Patient): string {
+  const entry = patient.readings.find((r) => /(episode|event|af burden|vt|shock)/i.test(r.label))
+  if (!entry) return "Captured in latest transmission"
+  return `${entry.value}${entry.unit ? ` ${entry.unit}` : ""}`
+}
+
+function EcgSnapshot({ level }: { level: number }) {
+  const stroke = level >= 9 ? "var(--danger)" : level >= 7 ? "var(--warning)" : "var(--accent)"
+  const points =
+    level >= 9
+      ? "0,48 10,48 18,40 24,56 34,18 42,60 52,34 62,50 72,46 82,52 92,44 102,50 112,48 122,36 130,58 140,20 148,60 158,34 168,50 178,46 188,49 198,47"
+      : "0,48 10,48 18,44 26,52 34,26 42,56 52,38 62,50 72,46 82,51 92,42 102,50 112,48 122,40 130,54 140,28 148,58 158,38 168,50 178,46 188,50 198,47"
+
+  return (
+    <svg viewBox="0 0 200 70" preserveAspectRatio="none" style={{ width: "100%", height: 96, display: "block", background: "rgba(247,250,255,0.95)" }}>
+      <defs>
+        <pattern id="ecg-grid" width="10" height="10" patternUnits="userSpaceOnUse">
+          <path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(20, 15, 75, 0.08)" strokeWidth="0.6" />
+        </pattern>
+      </defs>
+      <rect x="0" y="0" width="200" height="70" fill="url(#ecg-grid)" />
+      <polyline points={points} fill="none" stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   )
 }
 
