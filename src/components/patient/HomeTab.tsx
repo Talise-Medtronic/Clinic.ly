@@ -1,5 +1,6 @@
 import { useState } from "react"
 import ManagementCard from "./ManagementCard"
+import LogMascot from "./LogMascot"
 
 interface MetricCardProps {
   label: string
@@ -143,21 +144,26 @@ function RecentActivity() {
   )
 }
 
-export default function HomeTab() {
+export default function HomeTab({ streak }: { streak: number }) {
   const [showAlert] = useState(true)
 
   return (
     <div style={{ padding: "16px 16px 24px" }}>
       {/* Greeting */}
-      <div style={{ marginBottom: 16 }}>
-        <div style={{ fontSize: 11, fontFamily: "var(--mono)", color: "var(--text-muted)", letterSpacing: "0.08em", marginBottom: 4 }}>
-          {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }).toUpperCase()}
+      <div style={{ marginBottom: 16, display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 18 }}>
+        <div style={{ minWidth: 0 }}>
+          <div style={{ fontSize: 11, fontFamily: "var(--mono)", color: "var(--text-muted)", letterSpacing: "0.08em", marginBottom: 4 }}>
+            {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }).toUpperCase()}
+          </div>
+          <div style={{ fontSize: 20, fontWeight: 700, color: "var(--text)", letterSpacing: "-0.02em" }}>
+            Good morning, Margaret
+          </div>
+          <div style={{ fontSize: 12, color: "var(--text-sub)", marginTop: 2 }}>
+            Your device is syncing · Last update 4 min ago
+          </div>
         </div>
-        <div style={{ fontSize: 20, fontWeight: 700, color: "var(--text)", letterSpacing: "-0.02em" }}>
-          Good morning, Margaret
-        </div>
-        <div style={{ fontSize: 12, color: "var(--text-sub)", marginTop: 2 }}>
-          Your device is syncing · Last update 4 min ago
+        <div style={{ width: 92, height: 92, minWidth: 92, display: "flex", alignItems: "center", justifyContent: "center", background: "transparent", borderRadius: 22 }}>
+          <LogMascot mood={streak > 0 ? "happy" : "idle"} />
         </div>
       </div>
 
@@ -167,6 +173,34 @@ export default function HomeTab() {
           <AlertBanner />
         </div>
       )}
+
+      {/* Streak CTA */}
+      <div
+        style={{
+          background: "linear-gradient(180deg, #eff6ff 0%, #e0f2fe 100%)",
+          border: "1px solid rgba(59,130,246,0.22)",
+          borderRadius: 14,
+          padding: "14px 16px",
+          marginBottom: 10,
+        }}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, marginBottom: 8 }}>
+          <div>
+            <div style={{ fontFamily: "var(--mono)", fontSize: 9, fontWeight: 700, letterSpacing: "0.10em", textTransform: "uppercase", color: "#2563eb" }}>
+              Daily Log Streak
+            </div>
+            <div style={{ fontSize: 20, fontWeight: 700, color: "var(--text)", letterSpacing: "-0.03em" }}>
+              {streak} {streak === 1 ? "day" : "days"} in a row
+            </div>
+          </div>
+          <div style={{ fontFamily: "var(--mono)", fontSize: 13, fontWeight: 700, color: "#1d4ed8", background: "rgba(37,99,235,0.12)", padding: "10px 12px", borderRadius: 999 }}>
+            Keep logging
+          </div>
+        </div>
+        <div style={{ fontSize: 12, color: "var(--text-muted)", lineHeight: 1.5 }}>
+          Logging your symptoms, weight, or activity each day helps build better habits and keeps your care team informed.
+        </div>
+      </div>
 
       {/* Heart rate full-width */}
       <div

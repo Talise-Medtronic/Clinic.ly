@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import PatientHeader from "./PatientHeader"
 import HomeTab from "./HomeTab"
 import TrendsTab from "./TrendsTab"
@@ -50,8 +50,40 @@ const NAV: { id: Tab; label: string; icon: React.ReactNode }[] = [
   },
 ]
 
+function todayKey(date: Date) {
+  return date.toISOString().slice(0, 10)
+}
+
+function yesterdayKey(date: string) {
+  const d = new Date(date)
+  d.setDate(d.getDate() - 1)
+  return todayKey(d)
+}
+
 export default function PatientPortalApp({ onBack }: { onBack: () => void }) {
   const [tab, setTab] = useState<Tab>("home")
+  const [streak, setStreak] = useState(0)
+  const [lastLoggedDate, setLastLoggedDate] = useState("")
+
+  useEffect(() => {
+    const storedStreak = Number(localStorage.getItem("patientStreak") || 0)
+    const storedDate = localStorage.getItem("patientStreakDate") || ""
+    setStreak(storedStreak)
+    setLastLoggedDate(storedDate)
+  }, [])
+
+  function handleLogSaved() {
+    const today = todayKey(new Date())
+    if (today === lastLoggedDate) {
+      return
+    }
+
+    const nextStreak = lastLoggedDate === yesterdayKey(today) ? Math.max(streak + 1, 1) : 1
+    setStreak(nextStreak)
+    setLastLoggedDate(today)
+    localStorage.setItem("patientStreak", String(nextStreak))
+    localStorage.setItem("patientStreakDate", today)
+  }
 
   return (
     <div
@@ -104,9 +136,9 @@ export default function PatientPortalApp({ onBack }: { onBack: () => void }) {
       </nav>
 
       <div style={{ flex: 1, overflowY: "auto", overflowX: "hidden" }} className="animate-slide-up">
-        {tab === "home" && <HomeTab />}
+        {tab === "home" && <HomeTab streak={streak} />}
         {tab === "trends" && <TrendsTab />}
-        {tab === "log" && <LogTab />}
+        {tab === "log" && <LogTab streak={streak} onLogSaved={handleLogSaved} />}
         {tab === "profile" && <ProfileTab />}
       </div>
     </div>

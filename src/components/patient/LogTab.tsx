@@ -1,7 +1,7 @@
 import { useState } from "react"
-import SideSheet from "./SideSheet"
 import TableToolbar from "./TableToolbar"
 import RadialList from "./RadialList"
+import LogMascot from "./LogMascot"
 
 type Section = "weight" | "symptoms" | "activity"
 type ViewMode = "list" | "form"
@@ -436,11 +436,12 @@ function ActivitySection({ onSave }: { onSave: () => void }) {
   )
 }
 
-export default function LogTab() {
+export default function LogTab({ streak, onLogSaved }: { streak: number; onLogSaved: () => void }) {
   const [section, setSection] = useState<Section>("weight")
   const [viewMode, setViewMode] = useState<ViewMode>("list")
   const [searchValue, setSearchValue] = useState("")
   const [filterOpen, setFilterOpen] = useState(false)
+  const [mascotMood, setMascotMood] = useState<"idle" | "happy">("idle")
 
   // Mock data for logged entries
   const loggedEntries = {
@@ -458,15 +459,39 @@ export default function LogTab() {
     ],
   }
 
+  function handleSave() {
+    setMascotMood("happy")
+    setViewMode("list")
+    onLogSaved()
+    window.setTimeout(() => setMascotMood("idle"), 1400)
+  }
+
   return (
     <div style={{ padding: "16px 16px 24px" }}>
       {/* Header */}
       <div style={{ marginBottom: 16 }}>
-        <div style={{ fontSize: 18, fontWeight: 700, color: "var(--text)", letterSpacing: "-0.02em", marginBottom: 2 }}>
-          Health Log
-        </div>
-        <div style={{ fontSize: 12, color: "var(--text-muted)" }}>
-          Track your health data
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+          <div>
+            <div style={{ fontSize: 18, fontWeight: 700, color: "var(--text)", letterSpacing: "-0.02em", marginBottom: 2 }}>
+              Health Log
+            </div>
+            <div style={{ fontSize: 12, color: "var(--text-muted)" }}>
+              Track your health data
+            </div>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, background: "rgba(74,111,227,0.08)", border: "1px solid rgba(74,111,227,0.16)", borderRadius: 999, padding: "8px 10px" }}>
+            <LogMascot mood={mascotMood} />
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--text)" }}>
+                {mascotMood === "happy" ? "You did it!" : "Daily streak"}
+              </div>
+              <div style={{ fontSize: 11, color: "var(--text-muted)" }}>
+                {mascotMood === "happy"
+                  ? `Nice work logging today — ${streak} ${streak === 1 ? "day" : "days"} in a row!`
+                  : `Current streak: ${streak} ${streak === 1 ? "day" : "days"}`}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -500,9 +525,9 @@ export default function LogTab() {
         </>
       ) : (
         <div>
-          {section === "weight" && <WeightSection onSave={() => setViewMode("list")} />}
-          {section === "symptoms" && <SymptomsSection onSave={() => setViewMode("list")} />}
-          {section === "activity" && <ActivitySection onSave={() => setViewMode("list")} />}
+          {section === "weight" && <WeightSection onSave={handleSave} />}
+          {section === "symptoms" && <SymptomsSection onSave={handleSave} />}
+          {section === "activity" && <ActivitySection onSave={handleSave} />}
           
           <button
             onClick={() => setViewMode("list")}
