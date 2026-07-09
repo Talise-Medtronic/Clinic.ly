@@ -1,1 +1,71 @@
 @import 'tailwindcss';
+
+@font-face {
+	font-family: 'Avenir Next World';
+	src: url('../Avenir Next World ttf/AvenirNextWorld-Regular.ttf') format('truetype');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Avenir Next World';
+	src: url('../Avenir Next World ttf/AvenirNextWorld-Italic.ttf') format('truetype');
+	font-weight: 400;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Avenir Next World';
+	src: url('../Avenir Next World ttf/AvenirNextWorld-Demi.ttf') format('truetype');
+	font-weight: 600;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Avenir Next World';
+	src: url('../Avenir Next World ttf/AvenirNextWorld-DemiIt.ttf') format('truetype');
+	font-weight: 600;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Avenir Next World';
+	src: url('../Avenir Next World ttf/AvenirNextWorld-Bold.ttf') format('truetype');
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Avenir Next World';
+	src: url('../Avenir Next World ttf/AvenirNextWorld-BoldIt.ttf') format('truetype');
+	font-weight: 700;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Avenir Next World';
+	src: url('../Avenir Next World ttf/AvenirNextWorld-Thin.ttf') format('truetype');
+	font-weight: 300;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Avenir Next World';
+	src: url('../Avenir Next World ttf/AvenirNextWorld-ThinIt.ttf') format('truetype');
+	font-weight: 300;
+	font-style: italic;
+	font-display: swap;
+}
+
+html,
+body,
+#root {
+	font-family: 'Avenir Next World', 'Avenir Next', 'Segoe UI', sans-serif;
+}

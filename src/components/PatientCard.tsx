@@ -7,19 +7,19 @@ interface Props {
 }
 
 function alertColor(level: number): string {
-  if (level >= 9) return "#ff3b3b"
-  if (level >= 7) return "#ff8c00"
-  if (level >= 5) return "#f5c518"
-  if (level >= 3) return "#4fc3f7"
-  return "#4caf80"
+  if (level >= 9) return "var(--danger)"
+  if (level >= 7) return "var(--warning)"
+  if (level >= 5) return "#8f6d1a"
+  if (level >= 3) return "var(--accent)"
+  return "var(--ok)"
 }
 
 function alertBg(level: number): string {
-  if (level >= 9) return "rgba(255,59,59,0.10)"
-  if (level >= 7) return "rgba(255,140,0,0.10)"
-  if (level >= 5) return "rgba(245,197,24,0.08)"
-  if (level >= 3) return "rgba(79,195,247,0.08)"
-  return "rgba(76,175,128,0.08)"
+  if (level >= 9) return "rgba(209, 73, 47, 0.1)"
+  if (level >= 7) return "rgba(255, 184, 28, 0.16)"
+  if (level >= 5) return "rgba(0, 94, 184, 0.08)"
+  if (level >= 3) return "rgba(0, 169, 224, 0.1)"
+  return "rgba(0, 139, 93, 0.08)"
 }
 
 export default function PatientCard({ patient, selected, onClick }: Props) {
@@ -33,16 +33,17 @@ export default function PatientCard({ patient, selected, onClick }: Props) {
         width: "100%",
         textAlign: "left",
         background: selected
-          ? "rgba(255,255,255,0.07)"
+          ? "rgba(255,255,255,0.9)"
           : alertBg(patient.alertLevel),
-        border: "none",
+        border: "1px solid rgba(0, 79, 154, 0.16)",
         borderLeft: `3px solid ${color}`,
-        borderRadius: "0 6px 6px 0",
+        borderRadius: "10px",
         padding: "14px 16px",
         cursor: "pointer",
         position: "relative",
-        transition: "background 0.15s",
-        animation: isCritical ? "pulse-border 1.8s ease-in-out infinite" : "none",
+        transition: "all 0.2s ease",
+        animation: isCritical ? "pulse-border 2.6s ease-in-out infinite" : "none",
+        boxShadow: selected ? "0 8px 18px rgba(0, 57, 107, 0.12)" : "none",
       }}
     >
       {/* Alert level badge */}
@@ -55,11 +56,11 @@ export default function PatientCard({ patient, selected, onClick }: Props) {
           height: 28,
           borderRadius: "50%",
           background: color,
-          color: patient.alertLevel >= 9 ? "#fff" : "#0a0f1e",
+          color: "#f7fffc",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          fontFamily: "'JetBrains Mono', monospace",
+          fontFamily: "var(--font-mono)",
           fontSize: 12,
           fontWeight: 700,
           boxShadow: isCritical ? `0 0 10px ${color}` : "none",
@@ -70,10 +71,10 @@ export default function PatientCard({ patient, selected, onClick }: Props) {
 
       <div
         style={{
-          fontFamily: "'Inter', sans-serif",
+          fontFamily: "var(--font-display)",
           fontSize: 14,
           fontWeight: 600,
-          color: "#e8eef7",
+          color: "var(--text-strong)",
           marginBottom: 2,
           paddingRight: 36,
         }}
@@ -83,9 +84,9 @@ export default function PatientCard({ patient, selected, onClick }: Props) {
 
       <div
         style={{
-          fontFamily: "'JetBrains Mono', monospace",
+          fontFamily: "var(--font-mono)",
           fontSize: 11,
-          color: "rgba(180,195,220,0.65)",
+          color: "var(--text-subtle)",
           marginBottom: 6,
         }}
       >
@@ -94,7 +95,7 @@ export default function PatientCard({ patient, selected, onClick }: Props) {
 
       <div
         style={{
-          fontFamily: "'Inter', sans-serif",
+          fontFamily: "var(--font-ui)",
           fontSize: 12,
           color: color,
           fontWeight: 500,

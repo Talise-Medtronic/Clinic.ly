@@ -1,14 +1,25 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo, type CSSProperties } from "react"
 import { patients } from "./data/patients"
-import PatientCard from "./components/PatientCard"
 import PatientDetail from "./components/PatientDetail"
 
 const sorted = [...patients].sort((a, b) => b.alertLevel - a.alertLevel)
+type AppView = "home" | "patients" | "administrator"
+type AlertFilter = "all" | "critical" | "high" | "moderate" | "stable"
+type ScoreFilter = "all" | 10 | 9 | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1
 
 export default function App() {
   const [selectedId, setSelectedId] = useState<string>(sorted[0].id)
-  const [mobileTab, setMobileTab] = useState<"list" | "detail">("list")
+  const [view, setView] = useState<AppView>("patients")
+  const [mobileTab, setMobileTab] = useState<"list" | "detail">("detail")
   const [isMobile, setIsMobile] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [showFilters, setShowFilters] = useState(false)
+  const [alertFilter, setAlertFilter] = useState<AlertFilter>("all")
+  const [scoreFilter, setScoreFilter] = useState<ScoreFilter>("all")
+  const [doctorMenuOpen, setDoctorMenuOpen] = useState(false)
+  const [clinicalNotesById, setClinicalNotesById] = useState<Record<string, string>>(() =>
+    Object.fromEntries(patients.map((p) => [p.id, p.clinicalNotes])),
+  )
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
@@ -18,32 +29,84 @@ export default function App() {
   }, [])
 
   const selected = patients.find((p) => p.id === selectedId)!
+  const selectedWithNotes = {
+    ...selected,
+    clinicalNotes: clinicalNotesById[selected.id] ?? selected.clinicalNotes,
+  }
+
+  const filteredSorted = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase()
+    return sorted.filter((p) => {
+      if (
+        (alertFilter === "critical" && p.alertLevel < 9) ||
+        (alertFilter === "high" && (p.alertLevel < 7 || p.alertLevel > 8)) ||
+        (alertFilter === "moderate" && (p.alertLevel < 5 || p.alertLevel > 6)) ||
+        (alertFilter === "stable" && p.alertLevel > 2)
+      ) {
+        return false
+      }
+      if (scoreFilter !== "all" && p.alertLevel !== scoreFilter) return false
+      if (!q) return true
+      return (
+        p.name.toLowerCase().includes(q) ||
+        p.deviceModel.toLowerCase().includes(q) ||
+        p.alertTitle.toLowerCase().includes(q) ||
+        p.deviceId.toLowerCase().includes(q)
+      )
+    })
+  }, [searchQuery, alertFilter, scoreFilter])
 
   function handleSelect(id: string) {
     setSelectedId(id)
     if (isMobile) setMobileTab("detail")
   }
 
+  function handleClinicalNotesChange(nextValue: string) {
+    setClinicalNotesById((prev) => ({ ...prev, [selectedId]: nextValue }))
+  }
+
+  function batteryLife(patientId: string): string {
+    const patient = patients.find((p) => p.id === patientId)
+    const life = patient?.readings.find((r) => r.label.toLowerCase().includes("battery life"))
+    if (!life) return "n/a"
+    return `${life.value}${life.unit ? ` ${life.unit}` : ""}`
+  }
+
   return (
     <div
       style={{
         minHeight: "100vh",
-        background: "#0a0f1e",
+        background: "var(--bg-main)",
         display: "flex",
         flexDirection: "column",
-        fontFamily: "'Inter', sans-serif",
+        fontFamily: "var(--font-ui)",
+        position: "relative",
+        isolation: "isolate",
       }}
     >
-      {/* Top bar */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          pointerEvents: "none",
+          zIndex: 0,
+          background:
+            "linear-gradient(180deg, #f4f7ff 0%, #ebf1fc 100%)",
+        }}
+      />
+
       <header
         style={{
-          padding: "0 20px",
-          height: 56,
+          padding: "0 22px",
+          height: 66,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          borderBottom: "1px solid rgba(255,255,255,0.07)",
+          borderBottom: "1px solid rgba(20, 15, 75, 0.18)",
+          background: "rgba(255, 255, 255, 0.9)",
           flexShrink: 0,
+          position: "relative",
+          zIndex: 1,
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -52,10 +115,11 @@ export default function App() {
               width: 28,
               height: 28,
               borderRadius: 6,
-              background: "linear-gradient(135deg, #1a6cf0 0%, #0d47a1 100%)",
+              background: "linear-gradient(145deg, #140f4b 0%, #1010eb 100%)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              boxShadow: "0 8px 16px rgba(20, 15, 75, 0.28)",
             }}
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -65,35 +129,118 @@ export default function App() {
           </div>
           <span
             style={{
-              fontFamily: "'Inter', sans-serif",
+              fontFamily: "var(--font-display)",
               fontWeight: 700,
               fontSize: 17,
-              color: "#e8eef7",
-              letterSpacing: "-0.01em",
+              color: "var(--navy-fill)",
+              letterSpacing: "0.01em",
             }}
           >
             Clinic.ly
           </span>
         </div>
 
-        <div
-          style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 11,
-            color: "rgba(160,180,210,0.55)",
-          }}
-        >
-          Dr. Petra Halvorsen · Cardiology
+        <div style={{ display: "flex", alignItems: "center", gap: 10, position: "relative" }}>
+          <div
+            style={{
+              fontFamily: "var(--font-ui)",
+              fontSize: 12,
+              color: "var(--text-mid)",
+            }}
+          >
+            Dr. Geoff Martha · Cardiology
+          </div>
+
+          <button
+            onClick={() => setDoctorMenuOpen((v) => !v)}
+            style={{
+              border: "1px solid rgba(0, 79, 154, 0.22)",
+              background: "rgba(255, 255, 255, 0.9)",
+              borderRadius: 999,
+              width: 34,
+              height: 34,
+              display: "grid",
+              placeItems: "center",
+              cursor: "pointer",
+              boxShadow: "0 4px 10px rgba(0, 57, 107, 0.14)",
+            }}
+            aria-label="Open doctor menu"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="12" cy="8" r="3.5" stroke="var(--primary-base)" strokeWidth="1.8" />
+              <path d="M5 19C5.8 15.9 8.3 14.3 12 14.3C15.7 14.3 18.2 15.9 19 19" stroke="var(--primary-base)" strokeWidth="1.8" strokeLinecap="round" />
+            </svg>
+          </button>
+
+          {doctorMenuOpen && (
+            <div
+              style={{
+                position: "absolute",
+                top: 42,
+                right: 0,
+                width: 190,
+                background: "rgba(255,255,255,0.98)",
+                border: "1px solid rgba(0, 79, 154, 0.2)",
+                borderRadius: 10,
+                boxShadow: "0 14px 24px rgba(0, 40, 84, 0.16)",
+                overflow: "hidden",
+              }}
+            >
+              <MenuItem label="Doctor Profile" onClick={() => setDoctorMenuOpen(false)} />
+              <MenuItem label="Add New Patient" onClick={() => setDoctorMenuOpen(false)} />
+            </div>
+          )}
         </div>
       </header>
 
-      {/* Mobile tabs */}
-      {isMobile && (
+      <div
+        style={{
+          height: 42,
+          display: "flex",
+          alignItems: "stretch",
+          gap: 6,
+          padding: "0 16px",
+          borderBottom: "1px solid rgba(20, 15, 75, 0.14)",
+          background: "rgba(255, 255, 255, 0.82)",
+          position: "relative",
+          zIndex: 1,
+          flexShrink: 0,
+        }}
+      >
+        {([
+          { key: "home", label: "Home" },
+          { key: "patients", label: "Special Uses" },
+          { key: "administrator", label: "Administrator" },
+        ] as const).map((item) => (
+          <button
+            key={item.key}
+            onClick={() => setView(item.key)}
+            style={{
+              border: "none",
+              background: "transparent",
+              borderBottom: view === item.key ? "2px solid var(--primary-base)" : "2px solid transparent",
+              color: view === item.key ? "var(--primary-base)" : "var(--text-mid)",
+              fontFamily: "var(--font-ui)",
+              fontSize: 12,
+              fontWeight: view === item.key ? 600 : 500,
+              padding: "0 10px",
+              cursor: "pointer",
+            }}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
+
+      {isMobile && view === "patients" && (
         <div
           style={{
             display: "flex",
-            borderBottom: "1px solid rgba(255,255,255,0.07)",
+            borderBottom: "1px solid rgba(20, 15, 75, 0.15)",
+            background: "rgba(255, 255, 255, 0.72)",
             flexShrink: 0,
+            position: "relative",
+            zIndex: 1,
           }}
         >
           {(["list", "detail"] as const).map((tab) => (
@@ -106,12 +253,12 @@ export default function App() {
                 background: "none",
                 border: "none",
                 cursor: "pointer",
-                fontFamily: "'Inter', sans-serif",
+                fontFamily: "var(--font-display)",
                 fontSize: 13,
                 fontWeight: mobileTab === tab ? 600 : 400,
-                color: mobileTab === tab ? "#4fc3f7" : "rgba(160,180,210,0.55)",
-                borderBottom: mobileTab === tab ? "2px solid #4fc3f7" : "2px solid transparent",
-                transition: "all 0.15s",
+                color: mobileTab === tab ? "var(--primary-base)" : "var(--text-subtle)",
+                borderBottom: mobileTab === tab ? "2px solid var(--primary-base)" : "2px solid transparent",
+                transition: "all 0.18s",
                 textTransform: "capitalize",
               }}
             >
@@ -127,80 +274,488 @@ export default function App() {
           flex: 1,
           display: "flex",
           overflow: "hidden",
+          position: "relative",
+          zIndex: 1,
+          padding: 12,
+          gap: 12,
         }}
       >
-        {/* Patient list */}
-        {(!isMobile || mobileTab === "list") && (
+        {!isMobile && (
+          <aside
+            style={{
+              width: 58,
+              border: "1px solid rgba(20, 15, 75, 0.14)",
+              background: "rgba(255,255,255,0.84)",
+              borderRadius: 12,
+              padding: "10px 6px",
+              display: "flex",
+              flexDirection: "column",
+              gap: 8,
+              alignItems: "center",
+            }}
+          >
+            <RailDot active={view === "home"} label="H" />
+            <RailDot active={view === "patients"} label="S" />
+            <RailDot active={view === "administrator"} label="A" />
+          </aside>
+        )}
+
+        {view === "home" && (
+          <section style={{ flex: 1, overflowY: "auto", padding: 4 }}>
+            <div
+              style={{
+                border: "1px solid rgba(20, 15, 75, 0.14)",
+                background: "rgba(255,255,255,0.9)",
+                borderRadius: 12,
+                padding: "18px 18px 14px",
+                marginBottom: 12,
+              }}
+            >
+              <div style={{ fontFamily: "var(--font-display)", fontSize: 21, color: "var(--navy-fill)", fontWeight: 700 }}>
+                Welcome, Dr. Geoff Martha
+              </div>
+              <div style={{ fontFamily: "var(--font-ui)", fontSize: 13, color: "var(--text-mid)", marginTop: 6 }}>
+                StudySync-style dashboard for remote cardiac device management.
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))",
+                gap: 12,
+              }}
+            >
+              <HomeCard title="Special Use Management" subtitle="Review patient alerts and filter by severity" accent="var(--primary-base)" />
+              <HomeCard title="Tablet Management" subtitle="Configure bedside tablet cohorts" accent="var(--electric-blue-80)" />
+              <HomeCard title="Content Management" subtitle="Maintain protocol documents and updates" accent="var(--tertiary-base)" />
+              <HomeCard title="User Management" subtitle="Manage clinicians, roles, and access" accent="var(--navy-fill)" />
+            </div>
+          </section>
+        )}
+
+        {view === "administrator" && (
+          <section style={{ flex: 1, overflowY: "auto", padding: 4 }}>
+            <div style={{ border: "1px solid rgba(20, 15, 75, 0.14)", background: "rgba(255,255,255,0.9)", borderRadius: 12, padding: 18 }}>
+              <div style={{ fontFamily: "var(--font-display)", fontSize: 18, color: "var(--navy-fill)", fontWeight: 700, marginBottom: 8 }}>
+                Administrator
+              </div>
+              <div style={{ fontFamily: "var(--font-ui)", fontSize: 13, color: "var(--text-mid)" }}>
+                This route is reserved for StudySync administrator workflows.
+              </div>
+            </div>
+          </section>
+        )}
+
+        {view === "patients" && (!isMobile || mobileTab === "list") && (
           <div
             style={{
-              width: isMobile ? "100%" : 300,
+              width: isMobile ? "100%" : 520,
               flexShrink: 0,
-              borderRight: isMobile ? "none" : "1px solid rgba(255,255,255,0.07)",
+              border: "1px solid rgba(20, 15, 75, 0.14)",
+              background: "rgba(255,255,255,0.84)",
+              borderRadius: 12,
               overflowY: "auto",
               display: "flex",
               flexDirection: "column",
-              gap: 2,
-              padding: "12px 8px",
+              gap: 0,
             }}
           >
             <div
               style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: 10,
-                fontWeight: 700,
-                color: "rgba(130,155,190,0.5)",
-                letterSpacing: "0.10em",
-                textTransform: "uppercase",
-                padding: "4px 8px 8px",
+                padding: "14px 14px 10px",
+                borderBottom: "1px solid rgba(20, 15, 75, 0.12)",
               }}
             >
-              {sorted.length} Patients · Sorted by Alert
+              <div style={{ fontFamily: "var(--font-display)", fontSize: 17, color: "var(--navy-fill)", fontWeight: 700, marginBottom: 10 }}>
+                Special Uses
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 8,
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    border: "1px solid rgba(20, 15, 75, 0.2)",
+                    background: "rgba(255,255,255,0.95)",
+                    borderRadius: 9,
+                    padding: "8px 10px",
+                    flex: 1,
+                  }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <circle cx="11" cy="11" r="6.5" stroke="var(--primary-base)" strokeWidth="1.8" />
+                    <path d="M16 16L21 21" stroke="var(--primary-base)" strokeWidth="1.8" strokeLinecap="round" />
+                  </svg>
+                  <input
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search"
+                    style={{
+                      border: "none",
+                      outline: "none",
+                      width: "100%",
+                      fontFamily: "var(--font-ui)",
+                      fontSize: 12,
+                      color: "var(--text-strong)",
+                      background: "transparent",
+                    }}
+                  />
+                </div>
+
+                <button
+                  onClick={() => setShowFilters((v) => !v)}
+                  style={toolbarButtonStyle}
+                >
+                  Filter
+                </button>
+
+                <button style={{ ...toolbarButtonStyle, background: "var(--primary-base)", color: "#fff", borderColor: "var(--primary-base)" }}>
+                  + Add
+                </button>
+              </div>
+
+              {showFilters && (
+                <div style={{ marginTop: 10, border: "1px solid rgba(20, 15, 75, 0.14)", borderRadius: 10, padding: 10, background: "rgba(245,248,255,0.95)" }}>
+                  <div style={{ fontFamily: "var(--font-ui)", fontSize: 11, fontWeight: 600, color: "var(--text-mid)", marginBottom: 6 }}>
+                    Type Selection
+                  </div>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 8 }}>
+                    {(["all", "critical", "high", "moderate", "stable"] as const).map((item) => (
+                      <button
+                        key={item}
+                        onClick={() => setAlertFilter(item)}
+                        style={{
+                          border: "1px solid rgba(20, 15, 75, 0.18)",
+                          background: alertFilter === item ? "rgba(16, 16, 235, 0.12)" : "#fff",
+                          color: alertFilter === item ? "var(--primary-base)" : "var(--text-mid)",
+                          borderRadius: 999,
+                          padding: "5px 10px",
+                          fontFamily: "var(--font-ui)",
+                          fontSize: 11,
+                          cursor: "pointer",
+                          textTransform: "capitalize",
+                        }}
+                      >
+                        {item}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div style={{ fontFamily: "var(--font-ui)", fontSize: 11, fontWeight: 600, color: "var(--text-mid)", marginBottom: 6 }}>
+                    Score
+                  </div>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 8 }}>
+                    {(["all", 10, 9, 8, 7, 6, 5, 4, 3, 2, 1] as const).map((score) => (
+                      <button
+                        key={String(score)}
+                        onClick={() => setScoreFilter(score)}
+                        style={{
+                          border: "1px solid rgba(20, 15, 75, 0.18)",
+                          background: scoreFilter === score ? "rgba(16, 16, 235, 0.12)" : "#fff",
+                          color: scoreFilter === score ? "var(--primary-base)" : score === "all" ? "var(--text-mid)" : scoreColor(score),
+                          borderRadius: 999,
+                          padding: "5px 10px",
+                          fontFamily: "var(--font-ui)",
+                          fontSize: 11,
+                          fontWeight: 600,
+                          cursor: "pointer",
+                          textTransform: score === "all" ? "capitalize" : "none",
+                        }}
+                      >
+                        {score}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div style={{ display: "flex", gap: 6 }}>
+                    <button style={toolbarButtonStyle} onClick={() => setShowFilters(false)}>Apply</button>
+                    <button
+                      style={toolbarButtonStyle}
+                      onClick={() => {
+                        setAlertFilter("all")
+                        setScoreFilter("all")
+                        setSearchQuery("")
+                      }}
+                    >
+                      Clear
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
-            {sorted.map((p) => (
-              <PatientCard
-                key={p.id}
-                patient={p}
-                selected={p.id === selectedId}
-                onClick={() => handleSelect(p.id)}
-              />
-            ))}
+
+            <div style={{ padding: "8px 10px 12px" }}>
+              <div style={{ border: "1px solid rgba(20, 15, 75, 0.12)", borderRadius: 10, overflow: "hidden", background: "#fff" }}>
+                <TableHeader />
+                {filteredSorted.map((p) => (
+                  <button
+                    key={p.id}
+                    onClick={() => handleSelect(p.id)}
+                    style={{
+                      width: "100%",
+                      border: "none",
+                      borderTop: "1px solid rgba(20, 15, 75, 0.1)",
+                      background: p.id === selectedId ? "rgba(16, 16, 235, 0.07)" : "#fff",
+                      cursor: "pointer",
+                      padding: "0",
+                    }}
+                  >
+                    <div style={{ display: "grid", gridTemplateColumns: "1.3fr 0.8fr 0.8fr 0.6fr", padding: "10px 10px", alignItems: "center", gap: 8, textAlign: "left" }}>
+                      <div style={{ fontFamily: "var(--font-ui)", fontSize: 12, color: "var(--text-strong)", fontWeight: 600 }}>{p.name}</div>
+                      <div style={{ fontFamily: "var(--font-ui)", fontSize: 11, color: "var(--text-mid)" }}>{severity(p.alertLevel)}</div>
+                      <div style={{ fontFamily: "var(--font-ui)", fontSize: 11, color: "var(--text-mid)" }}>{batteryLife(p.id)}</div>
+                      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                        <span
+                          style={{
+                            color: scoreColor(p.alertLevel),
+                            fontFamily: "var(--font-ui)",
+                            fontSize: 13,
+                            fontWeight: 700,
+                          }}
+                        >
+                          {p.alertLevel}
+                        </span>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {filteredSorted.length === 0 && (
+              <div
+                style={{
+                  padding: "4px 14px 14px",
+                  fontFamily: "var(--font-ui)",
+                  fontSize: 12,
+                  color: "var(--text-subtle)",
+                }}
+              >
+                No rows found. Adjust filters or add a new patient.
+              </div>
+            )}
           </div>
         )}
 
-        {/* Detail panel */}
-        {(!isMobile || mobileTab === "detail") && (
+        {view === "patients" && (!isMobile || mobileTab === "detail") && (
           <div style={{ flex: 1, overflowY: "auto" }}>
-            <PatientDetail patient={selected} />
+            <PatientDetail
+              patient={selectedWithNotes}
+              onClinicalNotesChange={handleClinicalNotesChange}
+            />
           </div>
         )}
       </div>
 
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+        :root {
+          --font-display: 'Avenir Next World', 'Avenir Next', 'Segoe UI', sans-serif;
+          --font-ui: 'Avenir Next World', 'Avenir Next', 'Segoe UI', sans-serif;
+          --font-mono: 'Avenir Next World', 'Avenir Next', 'Segoe UI', sans-serif;
+          --bg-main: #edf2fb;
+          --surface-soft: rgba(255,255,255,0.72);
+          --surface-card: rgba(255,255,255,0.84);
+          --text-strong: #1a1f31;
+          --text-mid: #39476f;
+          --text-subtle: rgba(53, 68, 105, 0.68);
+          --navy-fill: #140f4b;
+          --electric-blue-80: #0c0ca5;
+          --primary-base: #1010eb;
+          --tertiary-base: #cd0025;
+          --accent: #1010eb;
+          --accent-2: #0c0ca5;
+          --danger: #cd0025;
+          --warning: #cb8a00;
+          --ok: #008b5d;
+        }
 
         * { box-sizing: border-box; }
 
         body {
           margin: 0;
-          background: #0a0f1e;
+          background: var(--bg-main);
+          color: var(--text-strong);
         }
 
         ::-webkit-scrollbar {
-          width: 4px;
+          width: 8px;
         }
         ::-webkit-scrollbar-track {
           background: transparent;
         }
         ::-webkit-scrollbar-thumb {
-          background: rgba(255,255,255,0.12);
-          border-radius: 2px;
+          background: rgba(20, 15, 75, 0.28);
+          border-radius: 99px;
         }
 
         @keyframes pulse-border {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.6; }
         }
+
+        @keyframes panel-rise {
+          from {
+            opacity: 0;
+            transform: translateY(8px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
       `}</style>
     </div>
   )
+}
+
+function MenuItem({ label, onClick }: { label: string; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        width: "100%",
+        border: "none",
+        textAlign: "left",
+        padding: "10px 12px",
+        fontFamily: "var(--font-ui)",
+        fontSize: 12,
+        color: "var(--text-mid)",
+        background: "transparent",
+        cursor: "pointer",
+      }}
+    >
+      {label}
+    </button>
+  )
+}
+
+const toolbarButtonStyle: CSSProperties = {
+  border: "1px solid rgba(20, 15, 75, 0.2)",
+  background: "#fff",
+  color: "var(--text-mid)",
+  borderRadius: 8,
+  padding: "7px 11px",
+  fontFamily: "var(--font-ui)",
+  fontSize: 12,
+  cursor: "pointer",
+}
+
+function RailDot({ active, label }: { active: boolean; label: string }) {
+  return (
+    <div
+      style={{
+        width: 30,
+        height: 30,
+        borderRadius: 8,
+        border: `1px solid ${active ? "rgba(16,16,235,0.5)" : "rgba(20,15,75,0.16)"}`,
+        background: active ? "rgba(16,16,235,0.1)" : "#fff",
+        color: active ? "var(--primary-base)" : "var(--text-subtle)",
+        fontFamily: "var(--font-ui)",
+        fontSize: 12,
+        fontWeight: 700,
+        display: "grid",
+        placeItems: "center",
+      }}
+    >
+      {label}
+    </div>
+  )
+}
+
+function HomeCard({ title, subtitle, accent }: { title: string; subtitle: string; accent: string }) {
+  return (
+    <div
+      style={{
+        border: "1px solid rgba(20, 15, 75, 0.14)",
+        background: "rgba(255,255,255,0.92)",
+        borderRadius: 12,
+        overflow: "hidden",
+      }}
+    >
+      <div style={{ height: 4, background: accent }} />
+      <div style={{ padding: 14 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+          <span
+            style={{
+              width: 20,
+              height: 20,
+              borderRadius: 6,
+              background: accent,
+              opacity: 0.22,
+              display: "inline-block",
+            }}
+          />
+          <div style={{ fontFamily: "var(--font-display)", fontSize: 14, fontWeight: 700, color: "var(--navy-fill)" }}>
+            {title}
+          </div>
+        </div>
+        <div style={{ fontFamily: "var(--font-ui)", fontSize: 12, color: "var(--text-mid)", marginBottom: 10 }}>{subtitle}</div>
+        <div style={{ display: "flex", gap: 6 }}>
+          <button style={toolbarButtonStyle}>Open</button>
+          <button style={toolbarButtonStyle}>Details</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function TableHeader() {
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "1.3fr 0.8fr 0.8fr 0.6fr",
+        gap: 8,
+        padding: "9px 10px",
+        background: "rgba(20, 15, 75, 0.04)",
+      }}
+    >
+      <TableHeaderCell label="Name" />
+      <TableHeaderCell label="Type" />
+      <TableHeaderCell label="Battery Left" />
+      <TableHeaderCell label="Score" align="right" />
+    </div>
+  )
+}
+
+function TableHeaderCell({ label, align = "left" }: { label: string; align?: "left" | "right" }) {
+  return (
+    <div
+      style={{
+        fontFamily: "var(--font-ui)",
+        fontSize: 10,
+        textTransform: "uppercase",
+        letterSpacing: "0.08em",
+        color: "var(--text-subtle)",
+        fontWeight: 600,
+        textAlign: align,
+      }}
+    >
+      {label}
+    </div>
+  )
+}
+
+function severity(level: number): string {
+  if (level >= 9) return "Critical"
+  if (level >= 7) return "High"
+  if (level >= 5) return "Moderate"
+  if (level >= 3) return "Low"
+  return "Stable"
+}
+
+function scoreColor(level: number): string {
+  if (level >= 9) return "var(--danger)"
+  if (level >= 7) return "var(--warning)"
+  if (level >= 5) return "var(--primary-base)"
+  if (level >= 3) return "var(--electric-blue-80)"
+  return "var(--ok)"
 }

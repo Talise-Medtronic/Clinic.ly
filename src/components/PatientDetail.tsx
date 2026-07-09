@@ -2,14 +2,15 @@ import type { Patient } from "../data/patients"
 
 interface Props {
   patient: Patient
+  onClinicalNotesChange: (value: string) => void
 }
 
 function alertColor(level: number): string {
-  if (level >= 9) return "#ff3b3b"
-  if (level >= 7) return "#ff8c00"
-  if (level >= 5) return "#f5c518"
-  if (level >= 3) return "#4fc3f7"
-  return "#4caf80"
+  if (level >= 9) return "var(--danger)"
+  if (level >= 7) return "var(--warning)"
+  if (level >= 5) return "var(--accent)"
+  if (level >= 3) return "var(--accent-2)"
+  return "var(--ok)"
 }
 
 function alertLabel(level: number): string {
@@ -20,7 +21,7 @@ function alertLabel(level: number): string {
   return "STABLE"
 }
 
-export default function PatientDetail({ patient }: Props) {
+export default function PatientDetail({ patient, onClinicalNotesChange }: Props) {
   const color = alertColor(patient.alertLevel)
   const isCritical = patient.alertLevel >= 9
 
@@ -33,6 +34,8 @@ export default function PatientDetail({ patient }: Props) {
         display: "flex",
         flexDirection: "column",
         gap: 20,
+        background: "rgba(255,255,255,0.4)",
+        animation: "panel-rise 360ms ease-out",
       }}
     >
       {/* Header */}
@@ -41,10 +44,10 @@ export default function PatientDetail({ patient }: Props) {
           <div>
             <h2
               style={{
-                fontFamily: "'Inter', sans-serif",
+                fontFamily: "var(--font-display)",
                 fontSize: 22,
                 fontWeight: 700,
-                color: "#e8eef7",
+                color: "var(--text-strong)",
                 margin: 0,
                 marginBottom: 4,
               }}
@@ -53,9 +56,9 @@ export default function PatientDetail({ patient }: Props) {
             </h2>
             <div
               style={{
-                fontFamily: "'JetBrains Mono', monospace",
+                fontFamily: "var(--font-mono)",
                 fontSize: 12,
-                color: "rgba(180,195,220,0.55)",
+                color: "var(--text-subtle)",
               }}
             >
               Age {patient.age} · Implanted {patient.implantDate}
@@ -78,11 +81,11 @@ export default function PatientDetail({ patient }: Props) {
                 height: 48,
                 borderRadius: "50%",
                 background: color,
-                color: patient.alertLevel >= 9 ? "#fff" : "#0a0f1e",
+                color: "#f7fffc",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontFamily: "'JetBrains Mono', monospace",
+                fontFamily: "var(--font-mono)",
                 fontSize: 20,
                 fontWeight: 700,
                 boxShadow: isCritical ? `0 0 20px ${color}` : "none",
@@ -92,7 +95,7 @@ export default function PatientDetail({ patient }: Props) {
             </div>
             <div
               style={{
-                fontFamily: "'JetBrains Mono', monospace",
+                fontFamily: "var(--font-mono)",
                 fontSize: 9,
                 fontWeight: 700,
                 color: color,
@@ -107,15 +110,16 @@ export default function PatientDetail({ patient }: Props) {
         {/* Alert banner */}
         <div
           style={{
-            background: `rgba(${isCritical ? "255,59,59" : patient.alertLevel >= 7 ? "255,140,0" : patient.alertLevel >= 5 ? "245,197,24" : "79,195,247"},0.08)`,
-            borderRadius: 8,
+            background: `rgba(${isCritical ? "209,73,47" : patient.alertLevel >= 7 ? "255,184,28" : patient.alertLevel >= 5 ? "0,94,184" : "0,169,224"},0.13)`,
+            borderRadius: 10,
             padding: "12px 14px",
             borderLeft: `3px solid ${color}`,
+            border: "1px solid rgba(0, 79, 154, 0.18)",
           }}
         >
           <div
             style={{
-              fontFamily: "'Inter', sans-serif",
+              fontFamily: "var(--font-display)",
               fontSize: 13,
               fontWeight: 600,
               color: color,
@@ -126,9 +130,9 @@ export default function PatientDetail({ patient }: Props) {
           </div>
           <div
             style={{
-              fontFamily: "'Inter', sans-serif",
+              fontFamily: "var(--font-ui)",
               fontSize: 12,
-              color: "rgba(200,215,235,0.80)",
+              color: "var(--text-mid)",
               lineHeight: 1.55,
             }}
           >
@@ -137,28 +141,16 @@ export default function PatientDetail({ patient }: Props) {
         </div>
       </div>
 
-      {/* Device info */}
-      <section>
-        <SectionLabel>Device</SectionLabel>
-        <div
-          style={{
-            background: "rgba(255,255,255,0.04)",
-            borderRadius: 8,
-            padding: "12px 14px",
-            display: "flex",
-            flexDirection: "column",
-            gap: 8,
-          }}
-        >
-          <Row label="Model" value={patient.deviceModel} />
-          <Row label="Device ID" value={patient.deviceId} mono />
-          <Row label="Implant Date" value={patient.implantDate} mono />
-        </div>
-      </section>
+      <SectionCard title="Header Details" actions={<CardActions labels={["Edit"]} />}>
+        <Row label="Description" value={patient.alertDescription} />
+        <Row label="Type" value={alertLabel(patient.alertLevel)} />
+        <Row label="Expiration (UTC)" value="2026-12-31 23:59 UTC" mono />
+        <Row label="Model" value={patient.deviceModel} />
+        <Row label="Device ID" value={patient.deviceId} mono />
+        <Row label="Implant Date" value={patient.implantDate} mono />
+      </SectionCard>
 
-      {/* Readings */}
-      <section>
-        <SectionLabel>Live Readings</SectionLabel>
+      <SectionCard title="Content" actions={<CardActions labels={["Add"]} />}>
         <div
           style={{
             display: "grid",
@@ -170,16 +162,18 @@ export default function PatientDetail({ patient }: Props) {
             <div
               key={r.label}
               style={{
-                background: "rgba(255,255,255,0.04)",
-                borderRadius: 8,
+                background: "rgba(255,255,255,0.74)",
+                borderRadius: 10,
                 padding: "10px 12px",
+                border: "1px solid rgba(0, 79, 154, 0.14)",
+                boxShadow: "0 6px 14px rgba(0, 57, 107, 0.06)",
               }}
             >
               <div
                 style={{
-                  fontFamily: "'JetBrains Mono', monospace",
+                  fontFamily: "var(--font-mono)",
                   fontSize: 10,
-                  color: "rgba(160,180,210,0.55)",
+                  color: "var(--text-subtle)",
                   marginBottom: 4,
                   textTransform: "uppercase",
                   letterSpacing: "0.06em",
@@ -189,10 +183,10 @@ export default function PatientDetail({ patient }: Props) {
               </div>
               <div
                 style={{
-                  fontFamily: "'JetBrains Mono', monospace",
+                  fontFamily: "var(--font-mono)",
                   fontSize: 20,
                   fontWeight: 700,
-                  color: "#e8eef7",
+                  color: "var(--text-strong)",
                   lineHeight: 1,
                 }}
               >
@@ -202,7 +196,7 @@ export default function PatientDetail({ patient }: Props) {
                     style={{
                       fontSize: 11,
                       fontWeight: 400,
-                      color: "rgba(160,180,210,0.6)",
+                      color: "var(--text-subtle)",
                       marginLeft: 4,
                     }}
                   >
@@ -213,25 +207,40 @@ export default function PatientDetail({ patient }: Props) {
             </div>
           ))}
         </div>
-      </section>
+      </SectionCard>
 
-      {/* Clinical notes */}
-      <section>
-        <SectionLabel>Clinical Notes</SectionLabel>
-        <div
+      <SectionCard title="Application IDs" actions={<CardActions labels={["Edit", "Add"]} />}>
+        <Row label="Primary App" value="Clinic Remote Monitor" />
+        <Row label="App ID" value={`${patient.deviceId}-APP`} mono />
+        <Row label="Integration" value="Rhythm Legacy Connector" />
+      </SectionCard>
+
+      <SectionCard title="Users" actions={<CardActions labels={["Edit", "Add"]} />}>
+        <Row label="Attending" value="Dr. Geoff Martha" />
+        <Row label="Role" value="Cardiology" />
+      </SectionCard>
+
+      <SectionCard title="Clinical Notes" actions={<CardActions labels={["Save"]} />}>
+        <textarea
+          value={patient.clinicalNotes}
+          onChange={(e) => onClinicalNotesChange(e.target.value)}
+          aria-label="Clinical notes"
           style={{
-            background: "rgba(255,255,255,0.04)",
-            borderRadius: 8,
+            background: "var(--surface-card)",
+            borderRadius: 10,
             padding: "12px 14px",
-            fontFamily: "'Inter', sans-serif",
+            fontFamily: "var(--font-ui)",
             fontSize: 13,
-            color: "rgba(200,215,235,0.80)",
+            color: "var(--text-mid)",
             lineHeight: 1.65,
+            border: "1px solid rgba(20, 15, 75, 0.14)",
+            width: "100%",
+            minHeight: 130,
+            resize: "vertical",
+            outline: "none",
           }}
-        >
-          {patient.clinicalNotes}
-        </div>
-      </section>
+        />
+      </SectionCard>
     </div>
   )
 }
@@ -240,10 +249,10 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <div
       style={{
-        fontFamily: "'JetBrains Mono', monospace",
+        fontFamily: "var(--font-mono)",
         fontSize: 10,
         fontWeight: 700,
-        color: "rgba(130,155,190,0.7)",
+        color: "var(--text-subtle)",
         letterSpacing: "0.10em",
         textTransform: "uppercase",
         marginBottom: 8,
@@ -254,14 +263,69 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   )
 }
 
+function SectionCard({
+  title,
+  actions,
+  children,
+}: {
+  title: string
+  actions?: React.ReactNode
+  children: React.ReactNode
+}) {
+  return (
+    <section
+      style={{
+        background: "var(--surface-card)",
+        borderRadius: 10,
+        border: "1px solid rgba(20, 15, 75, 0.14)",
+        boxShadow: "0 8px 18px rgba(20, 15, 75, 0.08)",
+        overflow: "hidden",
+      }}
+    >
+      <div style={{ height: 3, background: "var(--primary-base)" }} />
+      <div style={{ padding: "12px 14px" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8, gap: 8 }}>
+          <SectionLabel>{title}</SectionLabel>
+          {actions}
+        </div>
+        {children}
+      </div>
+    </section>
+  )
+}
+
+function CardActions({ labels }: { labels: string[] }) {
+  return (
+    <div style={{ display: "flex", gap: 6 }}>
+      {labels.map((label) => (
+        <button
+          key={label}
+          style={{
+            border: "1px solid rgba(20, 15, 75, 0.18)",
+            borderRadius: 8,
+            background: "#fff",
+            color: "var(--text-mid)",
+            fontFamily: "var(--font-ui)",
+            fontSize: 11,
+            padding: "4px 8px",
+            cursor: "pointer",
+          }}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
+  )
+}
+
 function Row({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
   return (
     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 8 }}>
       <span
         style={{
-          fontFamily: "'JetBrains Mono', monospace",
+          fontFamily: "var(--font-mono)",
           fontSize: 11,
-          color: "rgba(160,180,210,0.55)",
+          color: "var(--text-subtle)",
           flexShrink: 0,
         }}
       >
@@ -269,9 +333,9 @@ function Row({ label, value, mono }: { label: string; value: string; mono?: bool
       </span>
       <span
         style={{
-          fontFamily: mono ? "'JetBrains Mono', monospace" : "'Inter', sans-serif",
+          fontFamily: mono ? "var(--font-mono)" : "var(--font-ui)",
           fontSize: mono ? 12 : 13,
-          color: "#c8d7eb",
+          color: "var(--text-mid)",
           textAlign: "right",
           wordBreak: "break-all",
         }}
