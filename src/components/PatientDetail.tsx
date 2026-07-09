@@ -7,6 +7,7 @@ import {
   type VitalSeries,
   type VitalStatus,
 } from "../data/vitals"
+import { ecgExamples } from "../data/ecg"
 
 interface Props {
   patient: Patient
@@ -35,10 +36,18 @@ export default function PatientDetail({ patient, onClinicalNotesChange }: Props)
   const isAbnormalRhythm = hasAbnormalRhythm(patient)
   const eventTimeLabel = useMemo(() => getEventTimeLabel(patient), [patient])
   const [confirmedByPatientId, setConfirmedByPatientId] = useState<Record<string, boolean>>({})
+  const [declinedByPatientId, setDeclinedByPatientId] = useState<Record<string, boolean>>({})
   const isConfirmed = !!confirmedByPatientId[patient.id]
+  const isDeclined = !!declinedByPatientId[patient.id]
 
   function toggleEventConfirmation() {
     setConfirmedByPatientId((prev) => ({ ...prev, [patient.id]: !prev[patient.id] }))
+    setDeclinedByPatientId((prev) => ({ ...prev, [patient.id]: false }))
+  }
+
+  function toggleEventDecline() {
+    setDeclinedByPatientId((prev) => ({ ...prev, [patient.id]: !prev[patient.id] }))
+    setConfirmedByPatientId((prev) => ({ ...prev, [patient.id]: false }))
   }
 
   return (
@@ -167,22 +176,12 @@ export default function PatientDetail({ patient, onClinicalNotesChange }: Props)
 
       {isAbnormalRhythm && (
         <SectionCard title="ECG Event Snapshot" actions={<CardActions labels={[isConfirmed ? "Confirmed" : "Needs Review"]} />}>
-          <div
-            style={{
-              background: "rgba(255,255,255,0.74)",
-              borderRadius: 10,
-              border: "1px solid rgba(0, 79, 154, 0.16)",
-              overflow: "hidden",
-              boxShadow: "0 6px 14px rgba(0, 57, 107, 0.06)",
-            }}
-          >
-            <EcgSnapshot level={patient.alertLevel} />
-          </div>
+          <AiEcgViewer patient={patient} />
 
           <div style={{ marginTop: 10, display: "grid", gap: 6 }}>
             <Row label="Detected Event" value={patient.alertTitle} />
             <Row label="Snapshot Time" value={eventTimeLabel} />
-            <Row label="Status" value={isConfirmed ? "Doctor Confirmed" : "Awaiting Doctor Confirmation"} />
+            <Row label="Status" value={isConfirmed ? "Doctor Confirmed" : isDeclined ? "Doctor Declined" : "Awaiting Doctor Confirmation"} />
           </div>
 
           <div style={{ marginTop: 10, display: "flex", alignItems: "center", gap: 8 }}>
@@ -200,16 +199,32 @@ export default function PatientDetail({ patient, onClinicalNotesChange }: Props)
                 cursor: "pointer",
               }}
             >
-              {isConfirmed ? "Unconfirm Event" : "Confirm Event"}
+              {isConfirmed ? "Unconfirm" : "Confirm Event"}
+            </button>
+            <button
+              onClick={toggleEventDecline}
+              style={{
+                border: "1px solid rgba(20, 15, 75, 0.2)",
+                borderRadius: 8,
+                background: isDeclined ? "rgba(205, 0, 37, 0.10)" : "#fff",
+                color: isDeclined ? "var(--danger)" : "var(--text-mid)",
+                fontFamily: "var(--font-ui)",
+                fontSize: 12,
+                fontWeight: 600,
+                padding: "6px 10px",
+                cursor: "pointer",
+              }}
+            >
+              {isDeclined ? "Undecline" : "Decline Event"}
             </button>
             <span
               style={{
                 fontFamily: "var(--font-ui)",
                 fontSize: 12,
-                color: isConfirmed ? "var(--ok)" : "var(--warning)",
+                color: isConfirmed ? "var(--ok)" : isDeclined ? "var(--danger)" : "var(--warning)",
               }}
             >
-              {isConfirmed ? "Event review complete" : "Doctor action requested"}
+              {isConfirmed ? "Event review complete" : isDeclined ? "Event declined by doctor" : "Doctor action requested"}
             </span>
           </div>
         </SectionCard>
@@ -581,6 +596,99 @@ function getEventTimeLabel(patient: Patient): string {
   const entry = patient.readings.find((r) => /(episode|event|af burden|vt|shock)/i.test(r.label))
   if (!entry) return "Captured in latest transmission"
   return `${entry.value}${entry.unit ? ` ${entry.unit}` : ""}`
+}
+
+function AiEcgViewer({ patient }: { patient: Patient }) {
+  const [view, setView] = useState<"raw" | "gradcam">("raw")
+
+  const isAfibPatient = /(af|atrial fib)/i.test(`${patient.alertTitle} ${patient.alertDescription}`)
+  const afibPool = ecgExamples.filter((e) => e.gradcamClass === "AFIB")
+  const nPool = ecgExamples.filter((e) => e.gradcamClass === "N")
+  const pool = isAfibPatient ? afibPool : nPool
+  const example = pool[patient.id.charCodeAt(1) % pool.length]
+  const isAfib = example.gradcamClass === "AFIB"
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      {/* Classification + view toggle */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <span
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 10,
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              padding: "3px 10px",
+              borderRadius: 999,
+              background: isAfib ? "rgba(205, 0, 37, 0.10)" : "rgba(0, 139, 93, 0.10)",
+              color: isAfib ? "var(--danger)" : "var(--ok)",
+              border: `1px solid ${isAfib ? "rgba(205,0,37,0.22)" : "rgba(0,139,93,0.22)"}`,
+            }}
+          >
+            AI: {isAfib ? "AFIB" : "No AFIB"}
+          </span>
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--text-subtle)" }}>
+            {example.recordId}
+          </span>
+        </div>
+        <div style={{ display: "flex", gap: 5 }}>
+          {(["raw", "gradcam"] as const).map((v) => (
+            <button
+              key={v}
+              onClick={() => setView(v)}
+              style={{
+                border: "1px solid rgba(20, 15, 75, 0.18)",
+                background: view === v ? "var(--primary-base)" : "#fff",
+                color: view === v ? "#fff" : "var(--text-mid)",
+                borderRadius: 6,
+                padding: "3px 8px",
+                fontFamily: "var(--font-ui)",
+                fontSize: 10,
+                fontWeight: 600,
+                cursor: "pointer",
+              }}
+            >
+              {v === "raw" ? "Raw ECG" : "Grad-CAM"}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Scrollable image */}
+      <div
+        style={{
+          overflowX: "auto",
+          overflowY: "hidden",
+          borderRadius: 8,
+          border: "1px solid rgba(0, 79, 154, 0.16)",
+          background: "#fff",
+          boxShadow: "0 6px 14px rgba(0, 57, 107, 0.06)",
+        }}
+      >
+        <img
+          src={view === "raw" ? example.rawImage : example.gradcamImage}
+          alt={view === "raw" ? "Raw ECG signal" : "Grad-CAM explanation"}
+          style={{ height: 140, width: "auto", maxWidth: "none", display: "block" }}
+          draggable={false}
+        />
+      </div>
+
+      {view === "gradcam" && (
+        <div style={{ fontFamily: "var(--font-ui)", fontSize: 11, color: "var(--text-subtle)", lineHeight: 1.55 }}>
+          Red regions indicate signal segments most influential in the model&apos;s{" "}
+          <strong style={{ color: isAfib ? "var(--danger)" : "var(--ok)" }}>
+            {isAfib ? "AFIB" : "No AFIB"}
+          </strong>{" "}
+          classification. Model trained on the{" "}
+          <a href="https://physionet.org/content/afdb/1.0.0/" target="_blank" rel="noreferrer" style={{ color: "var(--primary-base)", textDecoration: "none" }}>
+            PhysioNet AF Database
+          </a>
+          .
+        </div>
+      )}
+    </div>
+  )
 }
 
 function EcgSnapshot({ level }: { level: number }) {

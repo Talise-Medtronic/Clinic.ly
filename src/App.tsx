@@ -2,9 +2,10 @@ import { useState, useEffect, useMemo, type CSSProperties } from "react"
 import { patients } from "./data/patients"
 import PatientDetail from "./components/PatientDetail"
 import PatientPortalApp from "./components/patient/PatientPortalApp"
+import EcgAnalysis from "./components/EcgAnalysis"
 
 const sorted = [...patients].sort((a, b) => b.alertLevel - a.alertLevel)
-type AppView = "home" | "patients" | "administrator" | "patient-portal"
+type AppView = "home" | "patients" | "administrator" | "patient-portal" | "ecg"
 type AlertFilter = "all" | "critical" | "high" | "moderate" | "stable"
 type ScoreFilter = "all" | 10 | 9 | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1
 type WarningSourceFilter = "all" | "heart" | "device"
@@ -292,6 +293,7 @@ export default function App() {
             >
               <MenuItem label="Doctor Profile" onClick={() => setDoctorMenuOpen(false)} />
               <MenuItem label="Add New Patient" onClick={() => setDoctorMenuOpen(false)} />
+              <MenuItem label="AI ECG Analysis" onClick={() => { setView("ecg"); setDoctorMenuOpen(false) }} />
             </div>
           )}
         </div>
@@ -345,6 +347,12 @@ export default function App() {
           gap: 12,
         }}
       >
+        {view === "ecg" && (
+          <section style={{ flex: 1, overflowY: "auto" }}>
+            <EcgAnalysis />
+          </section>
+        )}
+
         {view === "home" && (
           <section style={{ flex: 1, overflowY: "auto", padding: 4 }}>
             <div
