@@ -37,6 +37,7 @@ function SectionTab({ label, active, onClick }: { label: string; active: boolean
       onClick={onClick}
       style={{
         flex: 1,
+        minHeight: 36,
         padding: "8px 0",
         background: active ? "var(--blue)" : "transparent",
         border: "1px solid",
@@ -46,7 +47,7 @@ function SectionTab({ label, active, onClick }: { label: string; active: boolean
         fontSize: 12,
         fontWeight: active ? 600 : 400,
         color: active ? "#fff" : "var(--text-muted)",
-        transition: "all 0.15s",
+        transition: "all 160ms ease",
       }}
     >
       {label}
@@ -593,6 +594,7 @@ export default function LogTab({ onLogSaved }: { onLogSaved: () => void }) {
           borderRadius: 12,
           padding: "12px 14px",
           marginBottom: 14,
+          boxShadow: "0 8px 20px rgba(20,15,75,0.08)",
         }}
       >
         <div style={{ fontFamily: "var(--mono)", fontSize: 9, fontWeight: 700, letterSpacing: "0.10em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 7 }}>
@@ -606,6 +608,7 @@ export default function LogTab({ onLogSaved }: { onLogSaved: () => void }) {
                 key={provider}
                 onClick={() => setSelectedProvider(provider)}
                 style={{
+                  minHeight: 30,
                   padding: "6px 11px",
                   background: active ? "rgba(16,16,235,0.12)" : "var(--surface-2)",
                   border: "1px solid",
@@ -615,6 +618,7 @@ export default function LogTab({ onLogSaved }: { onLogSaved: () => void }) {
                   fontSize: 12,
                   color: active ? "var(--blue-bright)" : "var(--text-sub)",
                   cursor: "pointer",
+                  transition: "all 160ms ease",
                 }}
               >
                 {provider}
@@ -625,6 +629,7 @@ export default function LogTab({ onLogSaved }: { onLogSaved: () => void }) {
         <button
           style={{
             width: "100%",
+            minHeight: 36,
             padding: "10px 12px",
             background: "rgba(16,16,235,0.1)",
             border: "1px solid rgba(16,16,235,0.32)",
@@ -634,6 +639,7 @@ export default function LogTab({ onLogSaved }: { onLogSaved: () => void }) {
             fontWeight: 600,
             color: "var(--blue-bright)",
             cursor: "pointer",
+            transition: "all 160ms ease",
           }}
         >
           Connect provider
@@ -678,6 +684,7 @@ export default function LogTab({ onLogSaved }: { onLogSaved: () => void }) {
             onClick={() => setViewMode("list")}
             style={{
               width: "100%",
+              minHeight: 40,
               padding: "12px",
               background: "var(--surface-2)",
               border: "1px solid var(--border)",
@@ -687,6 +694,7 @@ export default function LogTab({ onLogSaved }: { onLogSaved: () => void }) {
               color: "var(--text-muted)",
               cursor: "pointer",
               marginTop: 12,
+              transition: "all 160ms ease",
             }}
           >
             Back to List

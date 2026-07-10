@@ -348,6 +348,7 @@ export default function PatientPortalApp({ onBack }: { onBack: () => void }) {
           borderBottom: "1px solid rgba(20, 15, 75, 0.14)",
           background: "rgba(255, 255, 255, 0.95)",
           backdropFilter: "blur(12px)",
+          boxShadow: "0 4px 12px rgba(20, 15, 75, 0.08)",
         }}
       >
         {NAV.map((n) => {
@@ -362,17 +363,18 @@ export default function PatientPortalApp({ onBack }: { onBack: () => void }) {
                 flexDirection: "column",
                 alignItems: "center",
                 gap: 4,
-                padding: "10px 0 8px",
+                minHeight: 52,
+                padding: "11px 0 9px",
                 background: "none",
                 border: "none",
                 borderBottom: active ? "2px solid #1010eb" : "2px solid transparent",
-                color: active ? "#1010eb" : "rgba(53, 68, 105, 0.55)",
-                transition: "color 0.15s, border-color 0.15s",
+                color: active ? "#1010eb" : "rgba(43, 58, 92, 0.75)",
+                transition: "all 160ms ease",
                 cursor: "pointer",
               }}
             >
               {n.icon}
-              <span style={{ fontFamily: "var(--sans)", fontSize: 10, fontWeight: active ? 700 : 400, letterSpacing: "0.04em" }}>
+              <span style={{ fontFamily: "var(--sans)", fontSize: 11, fontWeight: active ? 700 : 500, letterSpacing: "0.04em" }}>
                 {n.label}
               </span>
             </button>
@@ -392,10 +394,11 @@ export default function PatientPortalApp({ onBack }: { onBack: () => void }) {
                   background: "rgba(255,255,255,0.92)",
                   color: "var(--text)",
                   fontFamily: "var(--sans)",
-                  fontSize: 11,
+                  fontSize: 12,
                   fontWeight: 700,
-                  padding: "6px 10px",
+                  padding: "7px 12px",
                   cursor: "pointer",
+                  transition: "all 160ms ease",
                 }}
               >
                 Replay Dr Geppo Check-in

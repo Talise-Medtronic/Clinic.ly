@@ -167,6 +167,12 @@ export default function HomeTab({ streak }: { streak: number }) {
   const streakTier = getStreakTier(streak)
   const daysToNextReward = Math.max(nextMilestone - streak, 0)
   const progress = Math.max(4, Math.min(100, ((streak - previousMilestone) / Math.max(nextMilestone - previousMilestone, 1)) * 100))
+  const panelStyle = {
+    background: "var(--surface)",
+    border: "1px solid var(--border)",
+    borderRadius: 12,
+    boxShadow: "0 8px 20px rgba(20,15,75,0.08)",
+  } as const
 
   return (
     <div style={{ padding: "16px 16px 24px" }}>
@@ -192,7 +198,8 @@ export default function HomeTab({ streak }: { streak: number }) {
             borderRadius: 18,
             border: "1px solid rgba(59,130,246,0.2)",
             boxShadow: "0 14px 28px rgba(30,64,175,0.16)",
-            padding: "12px 12px 10px",
+            padding: "12px 12px 11px",
+            transition: "all 160ms ease",
           }}
         >
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
@@ -207,7 +214,7 @@ export default function HomeTab({ streak }: { streak: number }) {
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginBottom: 8 }}>
             <div>
               <div style={{ fontFamily: "var(--mono)", fontSize: 29, lineHeight: 1, fontWeight: 800, letterSpacing: "-0.03em" }}>{streak}</div>
-              <div style={{ fontSize: 11, color: "#334155" }}>{streak === 1 ? "day" : "days"} in a row</div>
+              <div style={{ fontSize: 11, color: "#24324a" }}>{streak === 1 ? "day" : "days"} in a row</div>
             </div>
             <div style={{ width: 56, height: 56, borderRadius: 14, background: "rgba(255,255,255,0.72)", border: "1px solid rgba(59,130,246,0.18)", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <LogMascot mood={streak > 0 ? "happy" : "idle"} />
@@ -217,7 +224,7 @@ export default function HomeTab({ streak }: { streak: number }) {
           <div style={{ height: 7, borderRadius: 999, background: "rgba(59,130,246,0.14)", overflow: "hidden", marginBottom: 7 }}>
             <div style={{ width: `${progress}%`, height: "100%", borderRadius: 999, background: "linear-gradient(90deg, #f59e0b 0%, #f97316 50%, #ef4444 100%)" }} />
           </div>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 10, color: "#334155" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 10, color: "#24324a" }}>
             <span>{daysToNextReward === 0 ? "Reward unlocked" : `${daysToNextReward} to reward`}</span>
             <span style={{ fontFamily: "var(--mono)", fontWeight: 700, color: "#1d4ed8" }}>{nextMilestone}d</span>
           </div>
@@ -234,9 +241,7 @@ export default function HomeTab({ streak }: { streak: number }) {
       {/* Heart rate full-width */}
       <div
         style={{
-          background: "var(--surface)",
-          border: "1px solid var(--border)",
-          borderRadius: 14,
+          ...panelStyle,
           padding: "14px 16px",
           marginBottom: 10,
         }}
@@ -323,9 +328,7 @@ export default function HomeTab({ streak }: { streak: number }) {
       {/* Recent activity */}
       <div
         style={{
-          background: "var(--surface)",
-          border: "1px solid var(--border)",
-          borderRadius: 14,
+          ...panelStyle,
           padding: "14px 16px",
           marginBottom: 14,
         }}

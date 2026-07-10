@@ -262,7 +262,7 @@ export default function App() {
       <header
         style={{
           padding: "0 22px",
-          height: 66,
+          height: 70,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -308,12 +308,13 @@ export default function App() {
               border: "1px solid rgba(0, 79, 154, 0.22)",
               background: "rgba(255,255,255,0.9)",
               color: "var(--text-mid)",
-              borderRadius: 8,
-              padding: "5px 10px",
+              borderRadius: "var(--radius-md)",
+              padding: "7px 12px",
               fontFamily: "var(--font-ui)",
-              fontSize: 11,
+              fontSize: 12,
               fontWeight: 600,
               cursor: "pointer",
+              transition: "var(--motion-fast)",
             }}
           >
             Patient Portal
@@ -324,7 +325,8 @@ export default function App() {
           <div
             style={{
               fontFamily: "var(--font-ui)",
-              fontSize: 12,
+              fontSize: 13,
+              fontWeight: 600,
               color: "var(--text-mid)",
             }}
           >
@@ -337,12 +339,13 @@ export default function App() {
               border: "1px solid rgba(0, 79, 154, 0.22)",
               background: "rgba(255, 255, 255, 0.9)",
               borderRadius: 999,
-              width: 34,
-              height: 34,
+              width: 36,
+              height: 36,
               display: "grid",
               placeItems: "center",
               cursor: "pointer",
               boxShadow: "0 4px 10px rgba(0, 57, 107, 0.14)",
+              transition: "var(--motion-fast)",
             }}
             aria-label="Open doctor menu"
           >
@@ -361,8 +364,8 @@ export default function App() {
                 width: 190,
                 background: "rgba(255,255,255,0.98)",
                 border: "1px solid rgba(0, 79, 154, 0.2)",
-                borderRadius: 10,
-                boxShadow: "0 14px 24px rgba(0, 40, 84, 0.16)",
+                borderRadius: "var(--radius-lg)",
+                boxShadow: "var(--shadow-card)",
                 overflow: "hidden",
               }}
             >
@@ -391,16 +394,17 @@ export default function App() {
               onClick={() => setMobileTab(tab)}
               style={{
                 flex: 1,
-                padding: "10px 0",
+                minHeight: 44,
+                padding: "12px 0",
                 background: "none",
                 border: "none",
                 cursor: "pointer",
                 fontFamily: "var(--font-display)",
-                fontSize: 13,
+                fontSize: 14,
                 fontWeight: mobileTab === tab ? 600 : 400,
                 color: mobileTab === tab ? "var(--primary-base)" : "var(--text-subtle)",
                 borderBottom: mobileTab === tab ? "2px solid var(--primary-base)" : "2px solid transparent",
-                transition: "all 0.18s",
+                transition: "var(--motion-fast)",
                 textTransform: "capitalize",
               }}
             >
@@ -434,12 +438,13 @@ export default function App() {
               style={{
                 border: "1px solid rgba(20, 15, 75, 0.14)",
                 background: "rgba(255,255,255,0.9)",
-                borderRadius: 12,
-                padding: "18px 18px 14px",
-                marginBottom: 12,
+                borderRadius: "var(--radius-lg)",
+                boxShadow: "var(--shadow-card)",
+                padding: "20px 20px 16px",
+                marginBottom: 14,
               }}
             >
-              <div style={{ fontFamily: "var(--font-display)", fontSize: 21, color: "var(--navy-fill)", fontWeight: 700 }}>
+              <div style={{ fontFamily: "var(--font-display)", fontSize: 22, color: "var(--navy-fill)", fontWeight: 700 }}>
                 Welcome, Dr Doof
               </div>
               <div style={{ fontFamily: "var(--font-ui)", fontSize: 13, color: "var(--text-mid)", marginTop: 6 }}>
@@ -464,7 +469,7 @@ export default function App() {
 
         {view === "administrator" && (
           <section style={{ flex: 1, overflowY: "auto", padding: 4 }}>
-            <div style={{ border: "1px solid rgba(20, 15, 75, 0.14)", background: "rgba(255,255,255,0.9)", borderRadius: 12, padding: 18 }}>
+            <div style={{ border: "1px solid rgba(20, 15, 75, 0.14)", background: "rgba(255,255,255,0.9)", borderRadius: "var(--radius-lg)", boxShadow: "var(--shadow-card)", padding: 20 }}>
               <div style={{ fontFamily: "var(--font-display)", fontSize: 18, color: "var(--navy-fill)", fontWeight: 700, marginBottom: 8 }}>
                 Administrator
               </div>
@@ -482,11 +487,12 @@ export default function App() {
               flexShrink: 0,
               border: "1px solid rgba(20, 15, 75, 0.14)",
               background: "rgba(255,255,255,0.84)",
-              borderRadius: 12,
+              borderRadius: "var(--radius-lg)",
               overflowY: "auto",
               display: "flex",
               flexDirection: "column",
               gap: 0,
+              boxShadow: "var(--shadow-card)",
             }}
           >
             <div
@@ -721,10 +727,14 @@ export default function App() {
             {listedPatients.length === 0 && (
               <div
                 style={{
-                  padding: "4px 14px 14px",
+                  margin: "4px 10px 14px",
+                  padding: "10px 12px",
+                  border: "1px dashed rgba(20, 15, 75, 0.22)",
+                  borderRadius: "var(--radius-md)",
+                  background: "rgba(245,248,255,0.92)",
                   fontFamily: "var(--font-ui)",
                   fontSize: 12,
-                  color: "var(--text-subtle)",
+                  color: "var(--text-mid)",
                 }}
               >
                 {patientQueueTab === "events"
@@ -754,8 +764,8 @@ export default function App() {
           --surface-soft: rgba(255,255,255,0.72);
           --surface-card: rgba(255,255,255,0.84);
           --text-strong: #1a1f31;
-          --text-mid: #39476f;
-          --text-subtle: rgba(53, 68, 105, 0.68);
+          --text-mid: #324162;
+          --text-subtle: rgba(43, 58, 92, 0.8);
           --navy-fill: #140f4b;
           --electric-blue-80: #0c0ca5;
           --primary-base: #1010eb;
@@ -765,6 +775,16 @@ export default function App() {
           --danger: #cd0025;
           --warning: #cb8a00;
           --ok: #008b5d;
+          --space-2: 8px;
+          --space-3: 12px;
+          --space-4: 16px;
+          --space-6: 24px;
+          --radius-sm: 8px;
+          --radius-md: 10px;
+          --radius-lg: 12px;
+          --shadow-card: 0 10px 24px rgba(20, 15, 75, 0.14);
+          --shadow-feature: 0 14px 30px rgba(20, 15, 75, 0.16);
+          --motion-fast: all 160ms ease;
         }
 
         * { box-sizing: border-box; }
@@ -911,12 +931,14 @@ function MenuItem({ label, onClick }: { label: string; onClick: () => void }) {
         width: "100%",
         border: "none",
         textAlign: "left",
+        minHeight: 40,
         padding: "10px 12px",
         fontFamily: "var(--font-ui)",
         fontSize: 12,
         color: "var(--text-mid)",
         background: "transparent",
         cursor: "pointer",
+        transition: "var(--motion-fast)",
       }}
     >
       {label}
@@ -928,11 +950,14 @@ const toolbarButtonStyle: CSSProperties = {
   border: "1px solid rgba(20, 15, 75, 0.2)",
   background: "#fff",
   color: "var(--text-mid)",
-  borderRadius: 8,
-  padding: "7px 11px",
+  borderRadius: "var(--radius-md)",
+  minHeight: 32,
+  padding: "7px 12px",
   fontFamily: "var(--font-ui)",
   fontSize: 12,
+  fontWeight: 600,
   cursor: "pointer",
+  transition: "var(--motion-fast)",
 }
 
 function HomeCard({ title, subtitle, accent }: { title: string; subtitle: string; accent: string }) {
@@ -941,18 +966,19 @@ function HomeCard({ title, subtitle, accent }: { title: string; subtitle: string
       style={{
         border: "1px solid rgba(20, 15, 75, 0.14)",
         background: "rgba(255,255,255,0.92)",
-        borderRadius: 12,
+        borderRadius: "var(--radius-lg)",
         overflow: "hidden",
+        boxShadow: "var(--shadow-card)",
       }}
     >
       <div style={{ height: 4, background: accent }} />
-      <div style={{ padding: 14 }}>
+      <div style={{ padding: 16 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
           <span
             style={{
               width: 20,
               height: 20,
-              borderRadius: 6,
+              borderRadius: "var(--radius-sm)",
               background: accent,
               opacity: 0.22,
               display: "inline-block",
