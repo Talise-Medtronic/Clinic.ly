@@ -66,7 +66,7 @@ export const patients: Patient[] = [
     name: "Sergey Barabanoff",
     age: 58,
     alertLevel: 8,
-    alertTitle: "AF Burden Elevated",
+    alertTitle: "AFib Burden Elevated",
     alertDescription: "Atrial fibrillation burden reached 47% over the past 7 days, up from 12% baseline. Sustained AF episode of 18 hours recorded. Stroke risk assessment recommended.",
     deviceModel: "Medtronic Evera MRI XT DR ICD",
     deviceId: "MDT-EVR-559912",

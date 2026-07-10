@@ -3,12 +3,15 @@ import { patients } from "./data/patients"
 import PatientDetail from "./components/PatientDetail"
 import PatientPortalApp from "./components/patient/PatientPortalApp"
 import EcgAnalysis from "./components/EcgAnalysis"
+import { notificationService, type PushNotification } from "./services/notificationService"
+import { ecgIngestionService } from "./services/ecgIngestionService"
 
 const sorted = [...patients].sort((a, b) => b.alertLevel - a.alertLevel)
 type AppView = "home" | "patients" | "administrator" | "patient-portal" | "ecg"
 type AlertFilter = "all" | "critical" | "high" | "moderate" | "stable"
 type ScoreFilter = "all" | 10 | 9 | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1
 type WarningSourceFilter = "all" | "heart" | "device"
+type PatientQueueTab = "events" | "all"
 
 export default function App() {
   const [selectedId, setSelectedId] = useState<string>(sorted[0].id)
@@ -20,9 +23,15 @@ export default function App() {
   const [alertFilter, setAlertFilter] = useState<AlertFilter>("all")
   const [warningSourceFilter, setWarningSourceFilter] = useState<WarningSourceFilter>("all")
   const [scoreFilter, setScoreFilter] = useState<ScoreFilter>("all")
+  const [patientQueueTab, setPatientQueueTab] = useState<PatientQueueTab>("events")
   const [doctorMenuOpen, setDoctorMenuOpen] = useState(false)
+  const [pushNotifications, setPushNotifications] = useState<PushNotification[]>([])
   const [clinicalNotesById, setClinicalNotesById] = useState<Record<string, string>>(() =>
     Object.fromEntries(patients.map((p) => [p.id, p.clinicalNotes])),
+  )
+  const patientPortalPatientId = useMemo(
+    () => patients.find((p) => p.name === "John Smith")?.id ?? sorted[0].id,
+    [],
   )
 
   useEffect(() => {
@@ -30,6 +39,36 @@ export default function App() {
     check()
     window.addEventListener("resize", check)
     return () => window.removeEventListener("resize", check)
+  }, [])
+
+  useEffect(() => {
+    ecgIngestionService.start()
+  }, [])
+
+  useEffect(() => {
+    const scopeId = "app-active-view"
+    if (view === "patient-portal") {
+      ecgIngestionService.subscribeScope(scopeId, [patientPortalPatientId])
+    } else {
+      ecgIngestionService.subscribeScope(
+        scopeId,
+        patients.map((p) => p.id),
+      )
+    }
+
+    return () => {
+      ecgIngestionService.unsubscribeScope(scopeId)
+    }
+  }, [view, patientPortalPatientId])
+
+  useEffect(() => {
+    return notificationService.subscribe((notification) => {
+      setPushNotifications((prev) => [notification, ...prev].slice(0, 4))
+
+      window.setTimeout(() => {
+        setPushNotifications((prev) => prev.filter((n) => n.id !== notification.id))
+      }, 12000)
+    })
   }, [])
 
   const selected = patients.find((p) => p.id === selectedId)!
@@ -62,6 +101,21 @@ export default function App() {
     })
   }, [searchQuery, alertFilter, warningSourceFilter, scoreFilter])
 
+  const listedPatients = useMemo(() => {
+    if (patientQueueTab === "events") {
+      return filteredSorted.filter((p) => p.alertLevel >= 7)
+    }
+    return filteredSorted
+  }, [filteredSorted, patientQueueTab])
+
+  useEffect(() => {
+    if (view !== "patients") return
+    if (listedPatients.length === 0) return
+    if (!listedPatients.some((p) => p.id === selectedId)) {
+      setSelectedId(listedPatients[0].id)
+    }
+  }, [listedPatients, selectedId, view])
+
   function handleSelect(id: string) {
     setSelectedId(id)
     if (isMobile) setMobileTab("detail")
@@ -69,6 +123,22 @@ export default function App() {
 
   function handleClinicalNotesChange(nextValue: string) {
     setClinicalNotesById((prev) => ({ ...prev, [selectedId]: nextValue }))
+  }
+
+  function dismissNotification(id: string) {
+    setPushNotifications((prev) => prev.filter((n) => n.id !== id))
+  }
+
+  function openPatientFromNotification(notification: PushNotification) {
+    setView("patients")
+    setPatientQueueTab("events")
+    setAlertFilter("all")
+    setWarningSourceFilter("all")
+    setScoreFilter("all")
+    setSearchQuery("")
+    setSelectedId(notification.patientId)
+    if (isMobile) setMobileTab("detail")
+    dismissNotification(notification.id)
   }
 
   function batteryLife(patientId: string): string {
@@ -157,6 +227,11 @@ export default function App() {
         <div style={{ paddingTop: 66 }}>
           <PatientPortalApp onBack={() => setView("patients")} />
         </div>
+        <NotificationStack
+          notifications={pushNotifications}
+          onViewPatient={openPatientFromNotification}
+          onDismiss={dismissNotification}
+        />
       </>
     )
   }
@@ -426,6 +501,40 @@ export default function App() {
               <div
                 style={{
                   display: "flex",
+                  border: "1px solid rgba(20, 15, 75, 0.16)",
+                  borderRadius: 10,
+                  background: "rgba(255,255,255,0.9)",
+                  overflow: "hidden",
+                  marginBottom: 10,
+                }}
+              >
+                {([
+                  { key: "events", label: "Patients with Events" },
+                  { key: "all", label: "All Patients" },
+                ] as const).map((tab) => (
+                  <button
+                    key={tab.key}
+                    onClick={() => setPatientQueueTab(tab.key)}
+                    style={{
+                      flex: 1,
+                      border: "none",
+                      borderRight: tab.key === "events" ? "1px solid rgba(20, 15, 75, 0.12)" : "none",
+                      background: patientQueueTab === tab.key ? "rgba(16, 16, 235, 0.12)" : "transparent",
+                      color: patientQueueTab === tab.key ? "var(--primary-base)" : "var(--text-mid)",
+                      padding: "8px 10px",
+                      fontFamily: "var(--font-ui)",
+                      fontSize: 11,
+                      fontWeight: patientQueueTab === tab.key ? 600 : 500,
+                      cursor: "pointer",
+                    }}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+              <div
+                style={{
+                  display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
                   gap: 8,
@@ -574,7 +683,7 @@ export default function App() {
             <div style={{ padding: "8px 10px 12px" }}>
               <div style={{ border: "1px solid rgba(20, 15, 75, 0.12)", borderRadius: 10, overflow: "hidden", background: "#fff" }}>
                 <TableHeader />
-                {filteredSorted.map((p) => (
+                {listedPatients.map((p) => (
                   <button
                     key={p.id}
                     onClick={() => handleSelect(p.id)}
@@ -609,7 +718,7 @@ export default function App() {
               </div>
             </div>
 
-            {filteredSorted.length === 0 && (
+            {listedPatients.length === 0 && (
               <div
                 style={{
                   padding: "4px 14px 14px",
@@ -618,7 +727,9 @@ export default function App() {
                   color: "var(--text-subtle)",
                 }}
               >
-                No rows found. Adjust filters or add a new patient.
+                {patientQueueTab === "events"
+                  ? "No patients with events match the current filters."
+                  : "No rows found. Adjust filters or add a new patient."}
               </div>
             )}
           </div>
@@ -691,6 +802,103 @@ export default function App() {
           }
         }
       `}</style>
+
+      <NotificationStack
+        notifications={pushNotifications}
+        onViewPatient={openPatientFromNotification}
+        onDismiss={dismissNotification}
+      />
+    </div>
+  )
+}
+
+function NotificationStack({
+  notifications,
+  onViewPatient,
+  onDismiss,
+}: {
+  notifications: PushNotification[]
+  onViewPatient: (notification: PushNotification) => void
+  onDismiss: (id: string) => void
+}) {
+  if (notifications.length === 0) return null
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: 82,
+        right: 16,
+        zIndex: 200,
+        display: "flex",
+        flexDirection: "column",
+        gap: 10,
+        width: "min(92vw, 320px)",
+      }}
+    >
+      {notifications.map((notification) => (
+        <div
+          key={notification.id}
+          style={{
+            border: "1px solid rgba(205, 0, 37, 0.28)",
+            borderRadius: 10,
+            background: "rgba(255,255,255,0.96)",
+            boxShadow: "0 10px 22px rgba(20, 15, 75, 0.16)",
+            padding: "10px 10px 9px",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 4 }}>
+            <div style={{ fontFamily: "var(--font-ui)", fontSize: 12, fontWeight: 700, color: "var(--danger)" }}>
+              {notification.title}
+            </div>
+            <button
+              type="button"
+              onMouseDown={(event) => {
+                event.preventDefault()
+                event.stopPropagation()
+              }}
+              onClick={(event) => {
+                event.preventDefault()
+                event.stopPropagation()
+                onDismiss(notification.id)
+              }}
+              style={{
+                border: "none",
+                background: "transparent",
+                color: "var(--text-subtle)",
+                fontFamily: "var(--font-ui)",
+                fontSize: 12,
+                cursor: "pointer",
+                padding: 0,
+              }}
+              aria-label="Dismiss notification"
+            >
+              x
+            </button>
+          </div>
+
+          <div style={{ fontFamily: "var(--font-ui)", fontSize: 12, color: "var(--text-mid)", marginBottom: 8 }}>
+            {notification.message}
+          </div>
+
+          <button
+            onClick={() => onViewPatient(notification)}
+            style={{
+              border: "1px solid rgba(20, 15, 75, 0.2)",
+              borderRadius: 8,
+              background: "var(--primary-base)",
+              color: "#fff",
+              fontFamily: "var(--font-ui)",
+              fontSize: 11,
+              fontWeight: 600,
+              padding: "5px 9px",
+              cursor: "pointer",
+            }}
+          >
+            View Patient Details
+          </button>
+        </div>
+      ))}
     </div>
   )
 }

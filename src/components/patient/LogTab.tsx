@@ -437,7 +437,7 @@ function ActivitySection({ onSave }: { onSave: () => void }) {
   )
 }
 
-export default function LogTab({ streak, onLogSaved }: { streak: number; onLogSaved: () => void }) {
+export default function LogTab({ onLogSaved }: { onLogSaved: () => void }) {
   const [section, setSection] = useState<Section>("weight")
   const [viewMode, setViewMode] = useState<ViewMode>("list")
   const [searchValue, setSearchValue] = useState("")
@@ -551,23 +551,8 @@ export default function LogTab({ streak, onLogSaved }: { streak: number; onLogSa
               <div style={{ fontSize: 14, color: "var(--text-sub)", lineHeight: 1.6 }}>
                 You logged something great today — keep your streak going.
               </div>
-              <div
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 8,
-                  marginTop: 6,
-                  padding: "10px 16px",
-                  background: "rgba(59,130,246,0.12)",
-                  borderRadius: 999,
-                  border: "1px solid rgba(59,130,246,0.24)",
-                  fontFamily: "var(--mono)",
-                  fontSize: 12,
-                  fontWeight: 700,
-                  color: "#1d4ed8",
-                }}
-              >
-                {streak} {streak === 1 ? "day" : "days"} streak
+              <div style={{ fontFamily: "var(--mono)", fontSize: 11, fontWeight: 700, color: "#0f172a", background: "rgba(15,23,42,0.08)", padding: "8px 12px", borderRadius: 999, marginTop: 6 }}>
+                Health data updated
               </div>
             </div>
           </div>
@@ -589,12 +574,12 @@ export default function LogTab({ streak, onLogSaved }: { streak: number; onLogSa
             <LogMascot mood={mascotMood} />
             <div style={{ minWidth: 0 }}>
               <div style={{ fontSize: 12, fontWeight: 700, color: "var(--text)" }}>
-                {mascotMood === "happy" ? "You did it!" : "Daily streak"}
+                {mascotMood === "happy" ? "Nice entry!" : "Logging buddy"}
               </div>
               <div style={{ fontSize: 11, color: "var(--text-muted)" }}>
                 {mascotMood === "happy"
-                  ? `Nice work logging today — ${streak} ${streak === 1 ? "day" : "days"} in a row!`
-                  : `Current streak: ${streak} ${streak === 1 ? "day" : "days"}`}
+                  ? "Your care team can now see your latest update."
+                  : "Add a weight, symptom, or activity entry."}
               </div>
             </div>
           </div>
@@ -611,7 +596,7 @@ export default function LogTab({ streak, onLogSaved }: { streak: number; onLogSa
         }}
       >
         <div style={{ fontFamily: "var(--mono)", fontSize: 9, fontWeight: 700, letterSpacing: "0.10em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 7 }}>
-          Connect Provider (Mock)
+          Connect Provider
         </div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 7, marginBottom: 10 }}>
           {PROVIDERS.map((provider) => {

@@ -29,6 +29,13 @@ export default defineConfig({
     strictPort: true,
     hmr: isFigmaSandbox ? { clientPort: 443 } : undefined,
     watch: { ignored: ['**/.figma/**'] },
+    proxy: {
+      '/api/medtronic/responses': {
+        target: 'https://api.gpt.medtronic.com',
+        changeOrigin: true,
+        rewrite: () => '/providers/openai/v1/responses',
+      },
+    },
   },
   preview: {
     host: '0.0.0.0',

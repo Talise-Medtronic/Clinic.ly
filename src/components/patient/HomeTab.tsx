@@ -144,8 +144,29 @@ function RecentActivity() {
   )
 }
 
+function getStreakTier(streak: number) {
+  if (streak >= 60) return "Legend"
+  if (streak >= 30) return "Elite"
+  if (streak >= 14) return "On Fire"
+  if (streak >= 7) return "Locked In"
+  if (streak >= 3) return "Building"
+  return "Starter"
+}
+
+function getNextMilestone(streak: number) {
+  const milestones = [3, 7, 14, 30, 60, 100]
+  const next = milestones.find((m) => m > streak)
+  if (next) return next
+  return Math.ceil((streak + 1) / 25) * 25
+}
+
 export default function HomeTab({ streak }: { streak: number }) {
   const [showAlert] = useState(true)
+  const nextMilestone = getNextMilestone(streak)
+  const previousMilestone = nextMilestone <= 3 ? 0 : nextMilestone === 7 ? 3 : nextMilestone === 14 ? 7 : nextMilestone === 30 ? 14 : nextMilestone === 60 ? 30 : nextMilestone === 100 ? 60 : nextMilestone - 25
+  const streakTier = getStreakTier(streak)
+  const daysToNextReward = Math.max(nextMilestone - streak, 0)
+  const progress = Math.max(4, Math.min(100, ((streak - previousMilestone) / Math.max(nextMilestone - previousMilestone, 1)) * 100))
 
   return (
     <div style={{ padding: "16px 16px 24px" }}>
@@ -156,14 +177,50 @@ export default function HomeTab({ streak }: { streak: number }) {
             {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }).toUpperCase()}
           </div>
           <div style={{ fontSize: 20, fontWeight: 700, color: "var(--text)", letterSpacing: "-0.02em" }}>
-            Good morning, Margaret
+            Good morning, John
           </div>
           <div style={{ fontSize: 12, color: "var(--text-sub)", marginTop: 2 }}>
             Your device is syncing · Last update 4 min ago
           </div>
         </div>
-        <div style={{ width: 92, height: 92, minWidth: 92, display: "flex", alignItems: "center", justifyContent: "center", background: "transparent", borderRadius: 22 }}>
-          <LogMascot mood={streak > 0 ? "happy" : "idle"} />
+        <div
+          style={{
+            minWidth: 188,
+            maxWidth: 188,
+            background: "linear-gradient(145deg, #f8fbff 0%, #ecf4ff 55%, #e8f5ff 100%)",
+            color: "#0f172a",
+            borderRadius: 18,
+            border: "1px solid rgba(59,130,246,0.2)",
+            boxShadow: "0 14px 28px rgba(30,64,175,0.16)",
+            padding: "12px 12px 10px",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+            <div style={{ fontFamily: "var(--mono)", fontSize: 9, letterSpacing: "0.08em", textTransform: "uppercase", color: "#1e3a8a" }}>
+              Daily Streak
+            </div>
+            <div style={{ fontFamily: "var(--mono)", fontSize: 10, fontWeight: 700, background: "rgba(245,158,11,0.16)", color: "#b45309", borderRadius: 999, padding: "2px 8px" }}>
+              {streakTier}
+            </div>
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginBottom: 8 }}>
+            <div>
+              <div style={{ fontFamily: "var(--mono)", fontSize: 29, lineHeight: 1, fontWeight: 800, letterSpacing: "-0.03em" }}>{streak}</div>
+              <div style={{ fontSize: 11, color: "#334155" }}>{streak === 1 ? "day" : "days"} in a row</div>
+            </div>
+            <div style={{ width: 56, height: 56, borderRadius: 14, background: "rgba(255,255,255,0.72)", border: "1px solid rgba(59,130,246,0.18)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <LogMascot mood={streak > 0 ? "happy" : "idle"} />
+            </div>
+          </div>
+
+          <div style={{ height: 7, borderRadius: 999, background: "rgba(59,130,246,0.14)", overflow: "hidden", marginBottom: 7 }}>
+            <div style={{ width: `${progress}%`, height: "100%", borderRadius: 999, background: "linear-gradient(90deg, #f59e0b 0%, #f97316 50%, #ef4444 100%)" }} />
+          </div>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 10, color: "#334155" }}>
+            <span>{daysToNextReward === 0 ? "Reward unlocked" : `${daysToNextReward} to reward`}</span>
+            <span style={{ fontFamily: "var(--mono)", fontWeight: 700, color: "#1d4ed8" }}>{nextMilestone}d</span>
+          </div>
         </div>
       </div>
 
@@ -173,34 +230,6 @@ export default function HomeTab({ streak }: { streak: number }) {
           <AlertBanner />
         </div>
       )}
-
-      {/* Streak CTA */}
-      <div
-        style={{
-          background: "linear-gradient(180deg, #eff6ff 0%, #e0f2fe 100%)",
-          border: "1px solid rgba(59,130,246,0.22)",
-          borderRadius: 14,
-          padding: "14px 16px",
-          marginBottom: 10,
-        }}
-      >
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, marginBottom: 8 }}>
-          <div>
-            <div style={{ fontFamily: "var(--mono)", fontSize: 9, fontWeight: 700, letterSpacing: "0.10em", textTransform: "uppercase", color: "#2563eb" }}>
-              Daily Log Streak
-            </div>
-            <div style={{ fontSize: 20, fontWeight: 700, color: "var(--text)", letterSpacing: "-0.03em" }}>
-              {streak} {streak === 1 ? "day" : "days"} in a row
-            </div>
-          </div>
-          <div style={{ fontFamily: "var(--mono)", fontSize: 13, fontWeight: 700, color: "#1d4ed8", background: "rgba(37,99,235,0.12)", padding: "10px 12px", borderRadius: 999 }}>
-            Keep logging
-          </div>
-        </div>
-        <div style={{ fontSize: 12, color: "var(--text-muted)", lineHeight: 1.5 }}>
-          Logging your symptoms, weight, or activity each day helps build better habits and keeps your care team informed.
-        </div>
-      </div>
 
       {/* Heart rate full-width */}
       <div

@@ -1,0 +1,2641 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAtUtc": "2026-07-09T12:00:00Z",
+  "timeZone": "America/Chicago",
+  "description": "Patient event history used for temporal and frequency trend analysis.",
+  "eventTypeCatalog": [
+    "afib_detected",
+    "vt_detected",
+    "shock_delivered",
+    "atp_delivered",
+    "lead_impedance_low",
+    "battery_low",
+    "sensing_amplitude_low",
+    "fluid_index_elevated",
+    "blood_pressure_elevated",
+    "routine_review"
+  ],
+  "patients": [
+    {
+      "patientId": "p1",
+      "deviceId": "MDT-CXT-884421",
+      "events": [
+        {
+          "eventId": "p1-e1",
+          "eventType": "vt_detected",
+          "severity": 8,
+          "occurredAtUtc": "2026-06-04T09:12:00Z",
+          "localDate": "2026-06-04",
+          "localTime": "04:12",
+          "localHour": 4,
+          "dayOfWeek": "Thursday",
+          "timeBucket": "overnight",
+          "minutesSincePreviousEvent": null,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "ventricular_rate",
+            "value": 180,
+            "unit": "bpm"
+          },
+          "source": "device_remote_transmission",
+          "actionTaken": "escalated_to_ep_on_call",
+          "resolved": false,
+          "tags": [
+            "arrhythmia",
+            "high_priority",
+            "vt_storm_risk"
+          ]
+        },
+        {
+          "eventId": "p1-e2",
+          "eventType": "atp_delivered",
+          "severity": 7,
+          "occurredAtUtc": "2026-06-04T09:21:00Z",
+          "localDate": "2026-06-04",
+          "localTime": "04:21",
+          "localHour": 4,
+          "dayOfWeek": "Thursday",
+          "timeBucket": "overnight",
+          "minutesSincePreviousEvent": 9,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "vt_episode_duration",
+            "value": 28,
+            "unit": "sec"
+          },
+          "source": "device_therapy_log",
+          "actionTaken": "atp_successful_continue_monitoring",
+          "resolved": false,
+          "tags": [
+            "arrhythmia",
+            "therapy"
+          ]
+        },
+        {
+          "eventId": "p1-e3",
+          "eventType": "vt_detected",
+          "severity": 9,
+          "occurredAtUtc": "2026-06-18T09:12:00Z",
+          "localDate": "2026-06-18",
+          "localTime": "04:12",
+          "localHour": 4,
+          "dayOfWeek": "Thursday",
+          "timeBucket": "overnight",
+          "minutesSincePreviousEvent": 20151,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "ventricular_rate",
+            "value": 185,
+            "unit": "bpm"
+          },
+          "source": "device_remote_transmission",
+          "actionTaken": "escalated_to_ep_on_call",
+          "resolved": false,
+          "tags": [
+            "arrhythmia",
+            "high_priority",
+            "vt_storm_risk"
+          ]
+        },
+        {
+          "eventId": "p1-e4",
+          "eventType": "atp_delivered",
+          "severity": 8,
+          "occurredAtUtc": "2026-06-18T09:21:00Z",
+          "localDate": "2026-06-18",
+          "localTime": "04:21",
+          "localHour": 4,
+          "dayOfWeek": "Thursday",
+          "timeBucket": "overnight",
+          "minutesSincePreviousEvent": 9,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "vt_episode_duration",
+            "value": 30,
+            "unit": "sec"
+          },
+          "source": "device_therapy_log",
+          "actionTaken": "atp_successful_continue_monitoring",
+          "resolved": false,
+          "tags": [
+            "arrhythmia",
+            "therapy"
+          ]
+        },
+        {
+          "eventId": "p1-e5",
+          "eventType": "vt_detected",
+          "severity": 10,
+          "occurredAtUtc": "2026-07-01T09:12:00Z",
+          "localDate": "2026-07-01",
+          "localTime": "04:12",
+          "localHour": 4,
+          "dayOfWeek": "Wednesday",
+          "timeBucket": "overnight",
+          "minutesSincePreviousEvent": 18711,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "ventricular_rate",
+            "value": 190,
+            "unit": "bpm"
+          },
+          "source": "device_remote_transmission",
+          "actionTaken": "escalated_to_ep_on_call",
+          "resolved": false,
+          "tags": [
+            "arrhythmia",
+            "high_priority",
+            "vt_storm_risk"
+          ]
+        },
+        {
+          "eventId": "p1-e6",
+          "eventType": "atp_delivered",
+          "severity": 9,
+          "occurredAtUtc": "2026-07-01T09:21:00Z",
+          "localDate": "2026-07-01",
+          "localTime": "04:21",
+          "localHour": 4,
+          "dayOfWeek": "Wednesday",
+          "timeBucket": "overnight",
+          "minutesSincePreviousEvent": 9,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "vt_episode_duration",
+            "value": 32,
+            "unit": "sec"
+          },
+          "source": "device_therapy_log",
+          "actionTaken": "atp_successful_continue_monitoring",
+          "resolved": false,
+          "tags": [
+            "arrhythmia",
+            "therapy"
+          ]
+        },
+        {
+          "eventId": "p1-e7",
+          "eventType": "shock_delivered",
+          "severity": 10,
+          "occurredAtUtc": "2026-07-01T09:32:00Z",
+          "localDate": "2026-07-01",
+          "localTime": "04:32",
+          "localHour": 4,
+          "dayOfWeek": "Wednesday",
+          "timeBucket": "overnight",
+          "minutesSincePreviousEvent": 11,
+          "rolling7dEventCount": 3,
+          "triggerMetric": {
+            "name": "vt_non_termination_after_atp",
+            "value": 1,
+            "unit": "boolean"
+          },
+          "source": "device_therapy_log",
+          "actionTaken": "urgent_clinician_notification",
+          "resolved": false,
+          "tags": [
+            "arrhythmia",
+            "shock",
+            "critical"
+          ]
+        },
+        {
+          "eventId": "p1-e8",
+          "eventType": "vt_detected",
+          "severity": 10,
+          "occurredAtUtc": "2026-07-08T09:12:00Z",
+          "localDate": "2026-07-08",
+          "localTime": "04:12",
+          "localHour": 4,
+          "dayOfWeek": "Wednesday",
+          "timeBucket": "overnight",
+          "minutesSincePreviousEvent": 10060,
+          "rolling7dEventCount": 3,
+          "triggerMetric": {
+            "name": "ventricular_rate",
+            "value": 195,
+            "unit": "bpm"
+          },
+          "source": "device_remote_transmission",
+          "actionTaken": "escalated_to_ep_on_call",
+          "resolved": false,
+          "tags": [
+            "arrhythmia",
+            "high_priority",
+            "vt_storm_risk"
+          ]
+        },
+        {
+          "eventId": "p1-e9",
+          "eventType": "atp_delivered",
+          "severity": 9,
+          "occurredAtUtc": "2026-07-08T09:21:00Z",
+          "localDate": "2026-07-08",
+          "localTime": "04:21",
+          "localHour": 4,
+          "dayOfWeek": "Wednesday",
+          "timeBucket": "overnight",
+          "minutesSincePreviousEvent": 9,
+          "rolling7dEventCount": 3,
+          "triggerMetric": {
+            "name": "vt_episode_duration",
+            "value": 34,
+            "unit": "sec"
+          },
+          "source": "device_therapy_log",
+          "actionTaken": "atp_successful_continue_monitoring",
+          "resolved": false,
+          "tags": [
+            "arrhythmia",
+            "therapy"
+          ]
+        },
+        {
+          "eventId": "p1-e10",
+          "eventType": "shock_delivered",
+          "severity": 10,
+          "occurredAtUtc": "2026-07-08T09:32:00Z",
+          "localDate": "2026-07-08",
+          "localTime": "04:32",
+          "localHour": 4,
+          "dayOfWeek": "Wednesday",
+          "timeBucket": "overnight",
+          "minutesSincePreviousEvent": 11,
+          "rolling7dEventCount": 3,
+          "triggerMetric": {
+            "name": "vt_non_termination_after_atp",
+            "value": 1,
+            "unit": "boolean"
+          },
+          "source": "device_therapy_log",
+          "actionTaken": "urgent_clinician_notification",
+          "resolved": false,
+          "tags": [
+            "arrhythmia",
+            "shock",
+            "critical"
+          ]
+        }
+      ]
+    },
+    {
+      "patientId": "p2",
+      "deviceId": "MDT-CXT-771203",
+      "events": [
+        {
+          "eventId": "p2-e1",
+          "eventType": "lead_impedance_low",
+          "severity": 5,
+          "occurredAtUtc": "2026-05-14T13:45:00Z",
+          "localDate": "2026-05-14",
+          "localTime": "08:45",
+          "localHour": 8,
+          "dayOfWeek": "Thursday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": null,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "rv_lead_impedance",
+            "value": 324,
+            "unit": "ohm"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "repeat_measurement_ordered",
+          "resolved": false,
+          "tags": [
+            "hardware",
+            "lead",
+            "downward_trend"
+          ]
+        },
+        {
+          "eventId": "p2-e2",
+          "eventType": "lead_impedance_low",
+          "severity": 5,
+          "occurredAtUtc": "2026-05-18T13:51:00Z",
+          "localDate": "2026-05-18",
+          "localTime": "08:51",
+          "localHour": 8,
+          "dayOfWeek": "Monday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 5766,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "rv_lead_impedance",
+            "value": 309,
+            "unit": "ohm"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "repeat_measurement_ordered",
+          "resolved": false,
+          "tags": [
+            "hardware",
+            "lead",
+            "downward_trend"
+          ]
+        },
+        {
+          "eventId": "p2-e3",
+          "eventType": "lead_impedance_low",
+          "severity": 6,
+          "occurredAtUtc": "2026-05-22T13:57:00Z",
+          "localDate": "2026-05-22",
+          "localTime": "08:57",
+          "localHour": 8,
+          "dayOfWeek": "Friday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 5766,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "rv_lead_impedance",
+            "value": 307,
+            "unit": "ohm"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "repeat_measurement_ordered",
+          "resolved": false,
+          "tags": [
+            "hardware",
+            "lead",
+            "downward_trend"
+          ]
+        },
+        {
+          "eventId": "p2-e4",
+          "eventType": "lead_impedance_low",
+          "severity": 6,
+          "occurredAtUtc": "2026-05-26T14:03:00Z",
+          "localDate": "2026-05-26",
+          "localTime": "09:03",
+          "localHour": 9,
+          "dayOfWeek": "Tuesday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 5766,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "rv_lead_impedance",
+            "value": 292,
+            "unit": "ohm"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "repeat_measurement_ordered",
+          "resolved": false,
+          "tags": [
+            "hardware",
+            "lead",
+            "downward_trend"
+          ]
+        },
+        {
+          "eventId": "p2-e5",
+          "eventType": "lead_impedance_low",
+          "severity": 6,
+          "occurredAtUtc": "2026-05-30T14:09:00Z",
+          "localDate": "2026-05-30",
+          "localTime": "09:09",
+          "localHour": 9,
+          "dayOfWeek": "Saturday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 5766,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "rv_lead_impedance",
+            "value": 290,
+            "unit": "ohm"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "repeat_measurement_ordered",
+          "resolved": false,
+          "tags": [
+            "hardware",
+            "lead",
+            "downward_trend"
+          ]
+        },
+        {
+          "eventId": "p2-e6",
+          "eventType": "lead_impedance_low",
+          "severity": 6,
+          "occurredAtUtc": "2026-06-03T14:15:00Z",
+          "localDate": "2026-06-03",
+          "localTime": "09:15",
+          "localHour": 9,
+          "dayOfWeek": "Wednesday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 5766,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "rv_lead_impedance",
+            "value": 275,
+            "unit": "ohm"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "repeat_measurement_ordered",
+          "resolved": false,
+          "tags": [
+            "hardware",
+            "lead",
+            "downward_trend"
+          ]
+        },
+        {
+          "eventId": "p2-e7",
+          "eventType": "lead_impedance_low",
+          "severity": 7,
+          "occurredAtUtc": "2026-06-07T13:50:00Z",
+          "localDate": "2026-06-07",
+          "localTime": "08:50",
+          "localHour": 8,
+          "dayOfWeek": "Sunday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 5735,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "rv_lead_impedance",
+            "value": 273,
+            "unit": "ohm"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "repeat_measurement_ordered",
+          "resolved": false,
+          "tags": [
+            "hardware",
+            "lead",
+            "downward_trend"
+          ]
+        },
+        {
+          "eventId": "p2-e8",
+          "eventType": "lead_impedance_low",
+          "severity": 7,
+          "occurredAtUtc": "2026-06-11T13:56:00Z",
+          "localDate": "2026-06-11",
+          "localTime": "08:56",
+          "localHour": 8,
+          "dayOfWeek": "Thursday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 5766,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "rv_lead_impedance",
+            "value": 258,
+            "unit": "ohm"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "repeat_measurement_ordered",
+          "resolved": false,
+          "tags": [
+            "hardware",
+            "lead",
+            "downward_trend"
+          ]
+        },
+        {
+          "eventId": "p2-e9",
+          "eventType": "lead_impedance_low",
+          "severity": 7,
+          "occurredAtUtc": "2026-06-15T14:02:00Z",
+          "localDate": "2026-06-15",
+          "localTime": "09:02",
+          "localHour": 9,
+          "dayOfWeek": "Monday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 5766,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "rv_lead_impedance",
+            "value": 256,
+            "unit": "ohm"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "repeat_measurement_ordered",
+          "resolved": false,
+          "tags": [
+            "hardware",
+            "lead",
+            "downward_trend"
+          ]
+        },
+        {
+          "eventId": "p2-e10",
+          "eventType": "lead_impedance_low",
+          "severity": 8,
+          "occurredAtUtc": "2026-06-19T14:08:00Z",
+          "localDate": "2026-06-19",
+          "localTime": "09:08",
+          "localHour": 9,
+          "dayOfWeek": "Friday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 5766,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "rv_lead_impedance",
+            "value": 241,
+            "unit": "ohm"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "repeat_measurement_ordered",
+          "resolved": false,
+          "tags": [
+            "hardware",
+            "lead",
+            "downward_trend"
+          ]
+        },
+        {
+          "eventId": "p2-e11",
+          "eventType": "lead_impedance_low",
+          "severity": 8,
+          "occurredAtUtc": "2026-06-23T14:14:00Z",
+          "localDate": "2026-06-23",
+          "localTime": "09:14",
+          "localHour": 9,
+          "dayOfWeek": "Tuesday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 5766,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "rv_lead_impedance",
+            "value": 239,
+            "unit": "ohm"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "repeat_measurement_ordered",
+          "resolved": false,
+          "tags": [
+            "hardware",
+            "lead",
+            "downward_trend"
+          ]
+        },
+        {
+          "eventId": "p2-e12",
+          "eventType": "lead_impedance_low",
+          "severity": 8,
+          "occurredAtUtc": "2026-06-27T13:49:00Z",
+          "localDate": "2026-06-27",
+          "localTime": "08:49",
+          "localHour": 8,
+          "dayOfWeek": "Saturday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 5735,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "rv_lead_impedance",
+            "value": 224,
+            "unit": "ohm"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "repeat_measurement_ordered",
+          "resolved": false,
+          "tags": [
+            "hardware",
+            "lead",
+            "downward_trend"
+          ]
+        },
+        {
+          "eventId": "p2-e13",
+          "eventType": "lead_impedance_low",
+          "severity": 9,
+          "occurredAtUtc": "2026-07-01T13:55:00Z",
+          "localDate": "2026-07-01",
+          "localTime": "08:55",
+          "localHour": 8,
+          "dayOfWeek": "Wednesday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 5766,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "rv_lead_impedance",
+            "value": 222,
+            "unit": "ohm"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "repeat_measurement_ordered",
+          "resolved": false,
+          "tags": [
+            "hardware",
+            "lead",
+            "downward_trend"
+          ]
+        },
+        {
+          "eventId": "p2-e14",
+          "eventType": "lead_impedance_low",
+          "severity": 9,
+          "occurredAtUtc": "2026-07-05T14:01:00Z",
+          "localDate": "2026-07-05",
+          "localTime": "09:01",
+          "localHour": 9,
+          "dayOfWeek": "Sunday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 5766,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "rv_lead_impedance",
+            "value": 207,
+            "unit": "ohm"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "repeat_measurement_ordered",
+          "resolved": false,
+          "tags": [
+            "hardware",
+            "lead",
+            "downward_trend"
+          ]
+        }
+      ]
+    },
+    {
+      "patientId": "p3",
+      "deviceId": "MDT-EVR-559912",
+      "events": [
+        {
+          "eventId": "p3-e1",
+          "eventType": "afib_detected",
+          "severity": 7,
+          "occurredAtUtc": "2026-06-19T08:00:00Z",
+          "localDate": "2026-06-19",
+          "localTime": "03:00",
+          "localHour": 3,
+          "dayOfWeek": "Friday",
+          "timeBucket": "overnight",
+          "minutesSincePreviousEvent": null,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "af_burden_7d",
+            "value": 30,
+            "unit": "percent"
+          },
+          "source": "rhythm_classifier",
+          "actionTaken": "push_notification_sent",
+          "resolved": false,
+          "tags": [
+            "arrhythmia",
+            "afib",
+            "high_frequency"
+          ]
+        },
+        {
+          "eventId": "p3-e2",
+          "eventType": "afib_detected",
+          "severity": 7,
+          "occurredAtUtc": "2026-06-19T08:20:00Z",
+          "localDate": "2026-06-19",
+          "localTime": "03:20",
+          "localHour": 3,
+          "dayOfWeek": "Friday",
+          "timeBucket": "overnight",
+          "minutesSincePreviousEvent": 20,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "af_episode_duration",
+            "value": 20,
+            "unit": "min"
+          },
+          "source": "rhythm_classifier",
+          "actionTaken": "push_notification_sent",
+          "resolved": false,
+          "tags": [
+            "arrhythmia",
+            "afib",
+            "recurring_20_min"
+          ]
+        },
+        {
+          "eventId": "p3-e3",
+          "eventType": "afib_detected",
+          "severity": 7,
+          "occurredAtUtc": "2026-06-19T08:40:00Z",
+          "localDate": "2026-06-19",
+          "localTime": "03:40",
+          "localHour": 3,
+          "dayOfWeek": "Friday",
+          "timeBucket": "overnight",
+          "minutesSincePreviousEvent": 20,
+          "rolling7dEventCount": 3,
+          "triggerMetric": {
+            "name": "ventricular_rate_in_af",
+            "value": 102,
+            "unit": "bpm"
+          },
+          "source": "rhythm_classifier",
+          "actionTaken": "push_notification_sent",
+          "resolved": false,
+          "tags": [
+            "arrhythmia",
+            "afib",
+            "recurring_20_min"
+          ]
+        },
+        {
+          "eventId": "p3-e4",
+          "eventType": "afib_detected",
+          "severity": 7,
+          "occurredAtUtc": "2026-06-19T09:00:00Z",
+          "localDate": "2026-06-19",
+          "localTime": "04:00",
+          "localHour": 4,
+          "dayOfWeek": "Friday",
+          "timeBucket": "overnight",
+          "minutesSincePreviousEvent": 20,
+          "rolling7dEventCount": 4,
+          "triggerMetric": {
+            "name": "mode_switch_events_week",
+            "value": 15,
+            "unit": "count"
+          },
+          "source": "rhythm_classifier",
+          "actionTaken": "doctor_review_flagged",
+          "resolved": false,
+          "tags": [
+            "arrhythmia",
+            "afib",
+            "recurring_20_min"
+          ]
+        },
+        {
+          "eventId": "p3-e5",
+          "eventType": "afib_detected",
+          "severity": 8,
+          "occurredAtUtc": "2026-06-26T08:00:00Z",
+          "localDate": "2026-06-26",
+          "localTime": "03:00",
+          "localHour": 3,
+          "dayOfWeek": "Friday",
+          "timeBucket": "overnight",
+          "minutesSincePreviousEvent": 10020,
+          "rolling7dEventCount": 4,
+          "triggerMetric": {
+            "name": "af_burden_7d",
+            "value": 35,
+            "unit": "percent"
+          },
+          "source": "rhythm_classifier",
+          "actionTaken": "push_notification_sent",
+          "resolved": false,
+          "tags": [
+            "arrhythmia",
+            "afib",
+            "high_frequency"
+          ]
+        },
+        {
+          "eventId": "p3-e6",
+          "eventType": "afib_detected",
+          "severity": 8,
+          "occurredAtUtc": "2026-06-26T08:20:00Z",
+          "localDate": "2026-06-26",
+          "localTime": "03:20",
+          "localHour": 3,
+          "dayOfWeek": "Friday",
+          "timeBucket": "overnight",
+          "minutesSincePreviousEvent": 20,
+          "rolling7dEventCount": 4,
+          "triggerMetric": {
+            "name": "af_episode_duration",
+            "value": 20,
+            "unit": "min"
+          },
+          "source": "rhythm_classifier",
+          "actionTaken": "push_notification_sent",
+          "resolved": false,
+          "tags": [
+            "arrhythmia",
+            "afib",
+            "recurring_20_min"
+          ]
+        },
+        {
+          "eventId": "p3-e7",
+          "eventType": "afib_detected",
+          "severity": 8,
+          "occurredAtUtc": "2026-06-26T08:40:00Z",
+          "localDate": "2026-06-26",
+          "localTime": "03:40",
+          "localHour": 3,
+          "dayOfWeek": "Friday",
+          "timeBucket": "overnight",
+          "minutesSincePreviousEvent": 20,
+          "rolling7dEventCount": 4,
+          "triggerMetric": {
+            "name": "ventricular_rate_in_af",
+            "value": 102,
+            "unit": "bpm"
+          },
+          "source": "rhythm_classifier",
+          "actionTaken": "push_notification_sent",
+          "resolved": false,
+          "tags": [
+            "arrhythmia",
+            "afib",
+            "recurring_20_min"
+          ]
+        },
+        {
+          "eventId": "p3-e8",
+          "eventType": "afib_detected",
+          "severity": 8,
+          "occurredAtUtc": "2026-06-26T09:00:00Z",
+          "localDate": "2026-06-26",
+          "localTime": "04:00",
+          "localHour": 4,
+          "dayOfWeek": "Friday",
+          "timeBucket": "overnight",
+          "minutesSincePreviousEvent": 20,
+          "rolling7dEventCount": 4,
+          "triggerMetric": {
+            "name": "mode_switch_events_week",
+            "value": 18,
+            "unit": "count"
+          },
+          "source": "rhythm_classifier",
+          "actionTaken": "doctor_review_flagged",
+          "resolved": false,
+          "tags": [
+            "arrhythmia",
+            "afib",
+            "recurring_20_min"
+          ]
+        },
+        {
+          "eventId": "p3-e9",
+          "eventType": "afib_detected",
+          "severity": 9,
+          "occurredAtUtc": "2026-07-03T08:00:00Z",
+          "localDate": "2026-07-03",
+          "localTime": "03:00",
+          "localHour": 3,
+          "dayOfWeek": "Friday",
+          "timeBucket": "overnight",
+          "minutesSincePreviousEvent": 10020,
+          "rolling7dEventCount": 4,
+          "triggerMetric": {
+            "name": "af_burden_7d",
+            "value": 40,
+            "unit": "percent"
+          },
+          "source": "rhythm_classifier",
+          "actionTaken": "push_notification_sent",
+          "resolved": false,
+          "tags": [
+            "arrhythmia",
+            "afib",
+            "high_frequency"
+          ]
+        },
+        {
+          "eventId": "p3-e10",
+          "eventType": "afib_detected",
+          "severity": 9,
+          "occurredAtUtc": "2026-07-03T08:20:00Z",
+          "localDate": "2026-07-03",
+          "localTime": "03:20",
+          "localHour": 3,
+          "dayOfWeek": "Friday",
+          "timeBucket": "overnight",
+          "minutesSincePreviousEvent": 20,
+          "rolling7dEventCount": 4,
+          "triggerMetric": {
+            "name": "af_episode_duration",
+            "value": 20,
+            "unit": "min"
+          },
+          "source": "rhythm_classifier",
+          "actionTaken": "push_notification_sent",
+          "resolved": false,
+          "tags": [
+            "arrhythmia",
+            "afib",
+            "recurring_20_min"
+          ]
+        },
+        {
+          "eventId": "p3-e11",
+          "eventType": "afib_detected",
+          "severity": 9,
+          "occurredAtUtc": "2026-07-03T08:40:00Z",
+          "localDate": "2026-07-03",
+          "localTime": "03:40",
+          "localHour": 3,
+          "dayOfWeek": "Friday",
+          "timeBucket": "overnight",
+          "minutesSincePreviousEvent": 20,
+          "rolling7dEventCount": 4,
+          "triggerMetric": {
+            "name": "ventricular_rate_in_af",
+            "value": 102,
+            "unit": "bpm"
+          },
+          "source": "rhythm_classifier",
+          "actionTaken": "push_notification_sent",
+          "resolved": false,
+          "tags": [
+            "arrhythmia",
+            "afib",
+            "recurring_20_min"
+          ]
+        },
+        {
+          "eventId": "p3-e12",
+          "eventType": "afib_detected",
+          "severity": 9,
+          "occurredAtUtc": "2026-07-03T09:00:00Z",
+          "localDate": "2026-07-03",
+          "localTime": "04:00",
+          "localHour": 4,
+          "dayOfWeek": "Friday",
+          "timeBucket": "overnight",
+          "minutesSincePreviousEvent": 20,
+          "rolling7dEventCount": 4,
+          "triggerMetric": {
+            "name": "mode_switch_events_week",
+            "value": 21,
+            "unit": "count"
+          },
+          "source": "rhythm_classifier",
+          "actionTaken": "doctor_review_flagged",
+          "resolved": false,
+          "tags": [
+            "arrhythmia",
+            "afib",
+            "recurring_20_min"
+          ]
+        },
+        {
+          "eventId": "p3-e13",
+          "eventType": "afib_detected",
+          "severity": 9,
+          "occurredAtUtc": "2026-07-09T08:00:00Z",
+          "localDate": "2026-07-09",
+          "localTime": "03:00",
+          "localHour": 3,
+          "dayOfWeek": "Thursday",
+          "timeBucket": "overnight",
+          "minutesSincePreviousEvent": 8580,
+          "rolling7dEventCount": 5,
+          "triggerMetric": {
+            "name": "af_burden_7d",
+            "value": 45,
+            "unit": "percent"
+          },
+          "source": "rhythm_classifier",
+          "actionTaken": "push_notification_sent",
+          "resolved": false,
+          "tags": [
+            "arrhythmia",
+            "afib",
+            "high_frequency"
+          ]
+        },
+        {
+          "eventId": "p3-e14",
+          "eventType": "afib_detected",
+          "severity": 9,
+          "occurredAtUtc": "2026-07-09T08:20:00Z",
+          "localDate": "2026-07-09",
+          "localTime": "03:20",
+          "localHour": 3,
+          "dayOfWeek": "Thursday",
+          "timeBucket": "overnight",
+          "minutesSincePreviousEvent": 20,
+          "rolling7dEventCount": 6,
+          "triggerMetric": {
+            "name": "af_episode_duration",
+            "value": 20,
+            "unit": "min"
+          },
+          "source": "rhythm_classifier",
+          "actionTaken": "push_notification_sent",
+          "resolved": false,
+          "tags": [
+            "arrhythmia",
+            "afib",
+            "recurring_20_min"
+          ]
+        },
+        {
+          "eventId": "p3-e15",
+          "eventType": "afib_detected",
+          "severity": 9,
+          "occurredAtUtc": "2026-07-09T08:40:00Z",
+          "localDate": "2026-07-09",
+          "localTime": "03:40",
+          "localHour": 3,
+          "dayOfWeek": "Thursday",
+          "timeBucket": "overnight",
+          "minutesSincePreviousEvent": 20,
+          "rolling7dEventCount": 7,
+          "triggerMetric": {
+            "name": "ventricular_rate_in_af",
+            "value": 102,
+            "unit": "bpm"
+          },
+          "source": "rhythm_classifier",
+          "actionTaken": "push_notification_sent",
+          "resolved": false,
+          "tags": [
+            "arrhythmia",
+            "afib",
+            "recurring_20_min"
+          ]
+        },
+        {
+          "eventId": "p3-e16",
+          "eventType": "afib_detected",
+          "severity": 9,
+          "occurredAtUtc": "2026-07-09T09:00:00Z",
+          "localDate": "2026-07-09",
+          "localTime": "04:00",
+          "localHour": 4,
+          "dayOfWeek": "Thursday",
+          "timeBucket": "overnight",
+          "minutesSincePreviousEvent": 20,
+          "rolling7dEventCount": 8,
+          "triggerMetric": {
+            "name": "mode_switch_events_week",
+            "value": 24,
+            "unit": "count"
+          },
+          "source": "rhythm_classifier",
+          "actionTaken": "doctor_review_flagged",
+          "resolved": false,
+          "tags": [
+            "arrhythmia",
+            "afib",
+            "recurring_20_min"
+          ]
+        }
+      ]
+    },
+    {
+      "patientId": "p4",
+      "deviceId": "MDT-CLR-330847",
+      "events": [
+        {
+          "eventId": "p4-e1",
+          "eventType": "battery_low",
+          "severity": 3,
+          "occurredAtUtc": "2026-01-10T15:50:00Z",
+          "localDate": "2026-01-10",
+          "localTime": "10:50",
+          "localHour": 10,
+          "dayOfWeek": "Saturday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": null,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "battery_voltage",
+            "value": 2.83,
+            "unit": "v"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "replacement_planning_started",
+          "resolved": false,
+          "tags": [
+            "battery",
+            "longevity"
+          ]
+        },
+        {
+          "eventId": "p4-e2",
+          "eventType": "battery_low",
+          "severity": 4,
+          "occurredAtUtc": "2026-02-06T16:06:00Z",
+          "localDate": "2026-02-06",
+          "localTime": "11:06",
+          "localHour": 11,
+          "dayOfWeek": "Friday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 38896,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "battery_voltage",
+            "value": 2.8,
+            "unit": "v"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "replacement_planning_started",
+          "resolved": false,
+          "tags": [
+            "battery",
+            "longevity"
+          ]
+        },
+        {
+          "eventId": "p4-e3",
+          "eventType": "battery_low",
+          "severity": 4,
+          "occurredAtUtc": "2026-03-05T16:01:00Z",
+          "localDate": "2026-03-05",
+          "localTime": "11:01",
+          "localHour": 11,
+          "dayOfWeek": "Thursday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 38875,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "battery_voltage",
+            "value": 2.79,
+            "unit": "v"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "replacement_planning_started",
+          "resolved": false,
+          "tags": [
+            "battery",
+            "longevity"
+          ]
+        },
+        {
+          "eventId": "p4-e4",
+          "eventType": "battery_low",
+          "severity": 4,
+          "occurredAtUtc": "2026-04-01T15:56:00Z",
+          "localDate": "2026-04-01",
+          "localTime": "10:56",
+          "localHour": 10,
+          "dayOfWeek": "Wednesday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 38875,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "battery_voltage",
+            "value": 2.76,
+            "unit": "v"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "replacement_planning_started",
+          "resolved": false,
+          "tags": [
+            "battery",
+            "longevity"
+          ]
+        },
+        {
+          "eventId": "p4-e5",
+          "eventType": "battery_low",
+          "severity": 5,
+          "occurredAtUtc": "2026-04-28T15:51:00Z",
+          "localDate": "2026-04-28",
+          "localTime": "10:51",
+          "localHour": 10,
+          "dayOfWeek": "Tuesday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 38875,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "battery_voltage",
+            "value": 2.76,
+            "unit": "v"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "replacement_planning_started",
+          "resolved": false,
+          "tags": [
+            "battery",
+            "longevity"
+          ]
+        },
+        {
+          "eventId": "p4-e6",
+          "eventType": "battery_low",
+          "severity": 6,
+          "occurredAtUtc": "2026-05-25T16:07:00Z",
+          "localDate": "2026-05-25",
+          "localTime": "11:07",
+          "localHour": 11,
+          "dayOfWeek": "Monday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 38896,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "battery_voltage",
+            "value": 2.72,
+            "unit": "v"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "replacement_target_month_confirmed",
+          "resolved": false,
+          "tags": [
+            "battery",
+            "downward_trend"
+          ]
+        },
+        {
+          "eventId": "p4-e7",
+          "eventType": "battery_low",
+          "severity": 6,
+          "occurredAtUtc": "2026-06-21T16:02:00Z",
+          "localDate": "2026-06-21",
+          "localTime": "11:02",
+          "localHour": 11,
+          "dayOfWeek": "Sunday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 38875,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "battery_voltage",
+            "value": 2.72,
+            "unit": "v"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "eri_watch_highlighted",
+          "resolved": false,
+          "tags": [
+            "battery",
+            "eri_window"
+          ]
+        }
+      ]
+    },
+    {
+      "patientId": "p5",
+      "deviceId": "MDT-CXT-662018",
+      "events": [
+        {
+          "eventId": "p5-e1",
+          "eventType": "sensing_amplitude_low",
+          "severity": 3,
+          "occurredAtUtc": "2026-05-07T18:52:00Z",
+          "localDate": "2026-05-07",
+          "localTime": "13:52",
+          "localHour": 13,
+          "dayOfWeek": "Thursday",
+          "timeBucket": "midday",
+          "minutesSincePreviousEvent": null,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "r_wave_amplitude",
+            "value": 4.28,
+            "unit": "mv"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "watchlist_added",
+          "resolved": false,
+          "tags": [
+            "sensing",
+            "weekly_pattern"
+          ]
+        },
+        {
+          "eventId": "p5-e2",
+          "eventType": "sensing_amplitude_low",
+          "severity": 3,
+          "occurredAtUtc": "2026-05-14T18:55:00Z",
+          "localDate": "2026-05-14",
+          "localTime": "13:55",
+          "localHour": 13,
+          "dayOfWeek": "Thursday",
+          "timeBucket": "midday",
+          "minutesSincePreviousEvent": 10083,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "r_wave_amplitude",
+            "value": 4.04,
+            "unit": "mv"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "watchlist_added",
+          "resolved": false,
+          "tags": [
+            "sensing",
+            "weekly_pattern"
+          ]
+        },
+        {
+          "eventId": "p5-e3",
+          "eventType": "sensing_amplitude_low",
+          "severity": 3,
+          "occurredAtUtc": "2026-05-21T18:58:00Z",
+          "localDate": "2026-05-21",
+          "localTime": "13:58",
+          "localHour": 13,
+          "dayOfWeek": "Thursday",
+          "timeBucket": "midday",
+          "minutesSincePreviousEvent": 10083,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "r_wave_amplitude",
+            "value": 4.06,
+            "unit": "mv"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "watchlist_added",
+          "resolved": false,
+          "tags": [
+            "sensing",
+            "weekly_pattern"
+          ]
+        },
+        {
+          "eventId": "p5-e4",
+          "eventType": "sensing_amplitude_low",
+          "severity": 4,
+          "occurredAtUtc": "2026-05-28T19:01:00Z",
+          "localDate": "2026-05-28",
+          "localTime": "14:01",
+          "localHour": 14,
+          "dayOfWeek": "Thursday",
+          "timeBucket": "afternoon",
+          "minutesSincePreviousEvent": 10083,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "r_wave_amplitude",
+            "value": 3.82,
+            "unit": "mv"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "watchlist_added",
+          "resolved": false,
+          "tags": [
+            "sensing",
+            "weekly_pattern"
+          ]
+        },
+        {
+          "eventId": "p5-e5",
+          "eventType": "sensing_amplitude_low",
+          "severity": 4,
+          "occurredAtUtc": "2026-06-04T19:04:00Z",
+          "localDate": "2026-06-04",
+          "localTime": "14:04",
+          "localHour": 14,
+          "dayOfWeek": "Thursday",
+          "timeBucket": "afternoon",
+          "minutesSincePreviousEvent": 10083,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "r_wave_amplitude",
+            "value": 3.84,
+            "unit": "mv"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "watchlist_added",
+          "resolved": false,
+          "tags": [
+            "sensing",
+            "weekly_pattern"
+          ]
+        },
+        {
+          "eventId": "p5-e6",
+          "eventType": "sensing_amplitude_low",
+          "severity": 4,
+          "occurredAtUtc": "2026-06-11T19:07:00Z",
+          "localDate": "2026-06-11",
+          "localTime": "14:07",
+          "localHour": 14,
+          "dayOfWeek": "Thursday",
+          "timeBucket": "afternoon",
+          "minutesSincePreviousEvent": 10083,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "r_wave_amplitude",
+            "value": 3.6,
+            "unit": "mv"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "watchlist_added",
+          "resolved": false,
+          "tags": [
+            "sensing",
+            "weekly_pattern"
+          ]
+        },
+        {
+          "eventId": "p5-e7",
+          "eventType": "sensing_amplitude_low",
+          "severity": 4,
+          "occurredAtUtc": "2026-06-18T18:53:00Z",
+          "localDate": "2026-06-18",
+          "localTime": "13:53",
+          "localHour": 13,
+          "dayOfWeek": "Thursday",
+          "timeBucket": "midday",
+          "minutesSincePreviousEvent": 10066,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "r_wave_amplitude",
+            "value": 3.62,
+            "unit": "mv"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "watchlist_added",
+          "resolved": false,
+          "tags": [
+            "sensing",
+            "weekly_pattern"
+          ]
+        },
+        {
+          "eventId": "p5-e8",
+          "eventType": "sensing_amplitude_low",
+          "severity": 4,
+          "occurredAtUtc": "2026-06-25T18:56:00Z",
+          "localDate": "2026-06-25",
+          "localTime": "13:56",
+          "localHour": 13,
+          "dayOfWeek": "Thursday",
+          "timeBucket": "midday",
+          "minutesSincePreviousEvent": 10083,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "r_wave_amplitude",
+            "value": 3.38,
+            "unit": "mv"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "watchlist_added",
+          "resolved": false,
+          "tags": [
+            "sensing",
+            "weekly_pattern"
+          ]
+        },
+        {
+          "eventId": "p5-e9",
+          "eventType": "sensing_amplitude_low",
+          "severity": 5,
+          "occurredAtUtc": "2026-07-02T18:59:00Z",
+          "localDate": "2026-07-02",
+          "localTime": "13:59",
+          "localHour": 13,
+          "dayOfWeek": "Thursday",
+          "timeBucket": "midday",
+          "minutesSincePreviousEvent": 10083,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "r_wave_amplitude",
+            "value": 3.4,
+            "unit": "mv"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "watchlist_added",
+          "resolved": false,
+          "tags": [
+            "sensing",
+            "weekly_pattern"
+          ]
+        }
+      ]
+    },
+    {
+      "patientId": "p6",
+      "deviceId": "MDT-CLR-445521",
+      "events": [
+        {
+          "eventId": "p6-e1",
+          "eventType": "fluid_index_elevated",
+          "severity": 2,
+          "occurredAtUtc": "2026-05-10T11:50:00Z",
+          "localDate": "2026-05-10",
+          "localTime": "06:50",
+          "localHour": 6,
+          "dayOfWeek": "Sunday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": null,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "optivol_index",
+            "value": 46.5,
+            "unit": "ohm_days"
+          },
+          "source": "heart_failure_monitor",
+          "actionTaken": "monitoring_only",
+          "resolved": false,
+          "tags": [
+            "hf",
+            "congestion_risk"
+          ]
+        },
+        {
+          "eventId": "p6-e2",
+          "eventType": "fluid_index_elevated",
+          "severity": 2,
+          "occurredAtUtc": "2026-05-15T12:06:00Z",
+          "localDate": "2026-05-15",
+          "localTime": "07:06",
+          "localHour": 7,
+          "dayOfWeek": "Friday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 7216,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "optivol_index",
+            "value": 45.6,
+            "unit": "ohm_days"
+          },
+          "source": "heart_failure_monitor",
+          "actionTaken": "monitoring_only",
+          "resolved": false,
+          "tags": [
+            "hf",
+            "congestion_risk"
+          ]
+        },
+        {
+          "eventId": "p6-e3",
+          "eventType": "fluid_index_elevated",
+          "severity": 2,
+          "occurredAtUtc": "2026-05-20T12:01:00Z",
+          "localDate": "2026-05-20",
+          "localTime": "07:01",
+          "localHour": 7,
+          "dayOfWeek": "Wednesday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 7195,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "optivol_index",
+            "value": 49.5,
+            "unit": "ohm_days"
+          },
+          "source": "heart_failure_monitor",
+          "actionTaken": "monitoring_only",
+          "resolved": false,
+          "tags": [
+            "hf",
+            "congestion_risk"
+          ]
+        },
+        {
+          "eventId": "p6-e4",
+          "eventType": "fluid_index_elevated",
+          "severity": 3,
+          "occurredAtUtc": "2026-05-25T11:56:00Z",
+          "localDate": "2026-05-25",
+          "localTime": "06:56",
+          "localHour": 6,
+          "dayOfWeek": "Monday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 7195,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "optivol_index",
+            "value": 48.6,
+            "unit": "ohm_days"
+          },
+          "source": "heart_failure_monitor",
+          "actionTaken": "monitoring_only",
+          "resolved": false,
+          "tags": [
+            "hf",
+            "congestion_risk"
+          ]
+        },
+        {
+          "eventId": "p6-e5",
+          "eventType": "fluid_index_elevated",
+          "severity": 3,
+          "occurredAtUtc": "2026-05-30T11:51:00Z",
+          "localDate": "2026-05-30",
+          "localTime": "06:51",
+          "localHour": 6,
+          "dayOfWeek": "Saturday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 7195,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "optivol_index",
+            "value": 52.5,
+            "unit": "ohm_days"
+          },
+          "source": "heart_failure_monitor",
+          "actionTaken": "monitoring_only",
+          "resolved": false,
+          "tags": [
+            "hf",
+            "congestion_risk"
+          ]
+        },
+        {
+          "eventId": "p6-e6",
+          "eventType": "fluid_index_elevated",
+          "severity": 3,
+          "occurredAtUtc": "2026-06-04T12:07:00Z",
+          "localDate": "2026-06-04",
+          "localTime": "07:07",
+          "localHour": 7,
+          "dayOfWeek": "Thursday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 7216,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "optivol_index",
+            "value": 51.6,
+            "unit": "ohm_days"
+          },
+          "source": "heart_failure_monitor",
+          "actionTaken": "monitoring_only",
+          "resolved": false,
+          "tags": [
+            "hf",
+            "congestion_risk"
+          ]
+        },
+        {
+          "eventId": "p6-e7",
+          "eventType": "fluid_index_elevated",
+          "severity": 3,
+          "occurredAtUtc": "2026-06-09T12:02:00Z",
+          "localDate": "2026-06-09",
+          "localTime": "07:02",
+          "localHour": 7,
+          "dayOfWeek": "Tuesday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 7195,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "optivol_index",
+            "value": 55.5,
+            "unit": "ohm_days"
+          },
+          "source": "heart_failure_monitor",
+          "actionTaken": "monitoring_only",
+          "resolved": false,
+          "tags": [
+            "hf",
+            "congestion_risk"
+          ]
+        },
+        {
+          "eventId": "p6-e8",
+          "eventType": "fluid_index_elevated",
+          "severity": 3,
+          "occurredAtUtc": "2026-06-14T11:57:00Z",
+          "localDate": "2026-06-14",
+          "localTime": "06:57",
+          "localHour": 6,
+          "dayOfWeek": "Sunday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 7195,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "optivol_index",
+            "value": 54.6,
+            "unit": "ohm_days"
+          },
+          "source": "heart_failure_monitor",
+          "actionTaken": "monitoring_only",
+          "resolved": false,
+          "tags": [
+            "hf",
+            "congestion_risk"
+          ]
+        },
+        {
+          "eventId": "p6-e9",
+          "eventType": "fluid_index_elevated",
+          "severity": 4,
+          "occurredAtUtc": "2026-06-19T11:52:00Z",
+          "localDate": "2026-06-19",
+          "localTime": "06:52",
+          "localHour": 6,
+          "dayOfWeek": "Friday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 7195,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "optivol_index",
+            "value": 58.5,
+            "unit": "ohm_days"
+          },
+          "source": "heart_failure_monitor",
+          "actionTaken": "monitoring_only",
+          "resolved": false,
+          "tags": [
+            "hf",
+            "congestion_risk"
+          ]
+        },
+        {
+          "eventId": "p6-e10",
+          "eventType": "fluid_index_elevated",
+          "severity": 4,
+          "occurredAtUtc": "2026-06-24T12:08:00Z",
+          "localDate": "2026-06-24",
+          "localTime": "07:08",
+          "localHour": 7,
+          "dayOfWeek": "Wednesday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 7216,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "optivol_index",
+            "value": 57.6,
+            "unit": "ohm_days"
+          },
+          "source": "heart_failure_monitor",
+          "actionTaken": "monitoring_only",
+          "resolved": false,
+          "tags": [
+            "hf",
+            "congestion_risk"
+          ]
+        },
+        {
+          "eventId": "p6-e11",
+          "eventType": "fluid_index_elevated",
+          "severity": 4,
+          "occurredAtUtc": "2026-06-29T12:03:00Z",
+          "localDate": "2026-06-29",
+          "localTime": "07:03",
+          "localHour": 7,
+          "dayOfWeek": "Monday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 7195,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "optivol_index",
+            "value": 61.5,
+            "unit": "ohm_days"
+          },
+          "source": "heart_failure_monitor",
+          "actionTaken": "nurse_call_recommended",
+          "resolved": false,
+          "tags": [
+            "hf",
+            "crossed_threshold"
+          ]
+        },
+        {
+          "eventId": "p6-e12",
+          "eventType": "fluid_index_elevated",
+          "severity": 4,
+          "occurredAtUtc": "2026-07-04T11:58:00Z",
+          "localDate": "2026-07-04",
+          "localTime": "06:58",
+          "localHour": 6,
+          "dayOfWeek": "Saturday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 7195,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "optivol_index",
+            "value": 60.6,
+            "unit": "ohm_days"
+          },
+          "source": "heart_failure_monitor",
+          "actionTaken": "nurse_call_recommended",
+          "resolved": false,
+          "tags": [
+            "hf",
+            "crossed_threshold"
+          ]
+        },
+        {
+          "eventId": "p6-e13",
+          "eventType": "fluid_index_elevated",
+          "severity": 4,
+          "occurredAtUtc": "2026-07-09T11:53:00Z",
+          "localDate": "2026-07-09",
+          "localTime": "06:53",
+          "localHour": 6,
+          "dayOfWeek": "Thursday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 7195,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "optivol_index",
+            "value": 64.5,
+            "unit": "ohm_days"
+          },
+          "source": "heart_failure_monitor",
+          "actionTaken": "diuretic_adjustment_consideration",
+          "resolved": false,
+          "tags": [
+            "hf",
+            "persisting_elevation"
+          ]
+        }
+      ]
+    },
+    {
+      "patientId": "p7",
+      "deviceId": "MDT-EVR-221784",
+      "events": [
+        {
+          "eventId": "p7-e1",
+          "eventType": "routine_review",
+          "severity": 1,
+          "occurredAtUtc": "2025-07-09T14:40:00Z",
+          "localDate": "2025-07-09",
+          "localTime": "09:40",
+          "localHour": 9,
+          "dayOfWeek": "Wednesday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": null,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "af_burden_7d",
+            "value": 2,
+            "unit": "percent"
+          },
+          "source": "quarterly_review",
+          "actionTaken": "no_action",
+          "resolved": true,
+          "tags": [
+            "routine",
+            "stable"
+          ]
+        },
+        {
+          "eventId": "p7-e2",
+          "eventType": "routine_review",
+          "severity": 1,
+          "occurredAtUtc": "2025-10-08T15:17:00Z",
+          "localDate": "2025-10-08",
+          "localTime": "10:17",
+          "localHour": 10,
+          "dayOfWeek": "Wednesday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 131077,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "af_burden_7d",
+            "value": 1,
+            "unit": "percent"
+          },
+          "source": "quarterly_review",
+          "actionTaken": "no_action",
+          "resolved": true,
+          "tags": [
+            "routine",
+            "stable"
+          ]
+        },
+        {
+          "eventId": "p7-e3",
+          "eventType": "routine_review",
+          "severity": 1,
+          "occurredAtUtc": "2026-01-07T15:13:00Z",
+          "localDate": "2026-01-07",
+          "localTime": "10:13",
+          "localHour": 10,
+          "dayOfWeek": "Wednesday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 131036,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "af_burden_7d",
+            "value": 2,
+            "unit": "percent"
+          },
+          "source": "quarterly_review",
+          "actionTaken": "no_action",
+          "resolved": true,
+          "tags": [
+            "routine",
+            "stable"
+          ]
+        },
+        {
+          "eventId": "p7-e4",
+          "eventType": "routine_review",
+          "severity": 1,
+          "occurredAtUtc": "2026-04-08T15:09:00Z",
+          "localDate": "2026-04-08",
+          "localTime": "10:09",
+          "localHour": 10,
+          "dayOfWeek": "Wednesday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 131036,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "af_burden_7d",
+            "value": 1,
+            "unit": "percent"
+          },
+          "source": "quarterly_review",
+          "actionTaken": "no_action",
+          "resolved": true,
+          "tags": [
+            "routine",
+            "stable"
+          ]
+        },
+        {
+          "eventId": "p7-e5",
+          "eventType": "routine_review",
+          "severity": 1,
+          "occurredAtUtc": "2026-07-08T15:05:00Z",
+          "localDate": "2026-07-08",
+          "localTime": "10:05",
+          "localHour": 10,
+          "dayOfWeek": "Wednesday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 131036,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "af_burden_7d",
+            "value": 2,
+            "unit": "percent"
+          },
+          "source": "quarterly_review",
+          "actionTaken": "no_action",
+          "resolved": true,
+          "tags": [
+            "routine",
+            "stable"
+          ]
+        }
+      ]
+    },
+    {
+      "patientId": "p8",
+      "deviceId": "MDT-CLR-118833",
+      "events": [
+        {
+          "eventId": "p8-e1",
+          "eventType": "routine_review",
+          "severity": 1,
+          "occurredAtUtc": "2025-12-11T16:45:00Z",
+          "localDate": "2025-12-11",
+          "localTime": "11:45",
+          "localHour": 11,
+          "dayOfWeek": "Thursday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": null,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "crt_pacing_percent",
+            "value": 99,
+            "unit": "percent"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "no_action",
+          "resolved": true,
+          "tags": [
+            "routine",
+            "stable"
+          ]
+        },
+        {
+          "eventId": "p8-e2",
+          "eventType": "routine_review",
+          "severity": 1,
+          "occurredAtUtc": "2026-01-10T16:51:00Z",
+          "localDate": "2026-01-10",
+          "localTime": "11:51",
+          "localHour": 11,
+          "dayOfWeek": "Saturday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 43206,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "crt_pacing_percent",
+            "value": 97,
+            "unit": "percent"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "no_action",
+          "resolved": true,
+          "tags": [
+            "routine",
+            "stable"
+          ]
+        },
+        {
+          "eventId": "p8-e3",
+          "eventType": "routine_review",
+          "severity": 1,
+          "occurredAtUtc": "2026-02-09T16:57:00Z",
+          "localDate": "2026-02-09",
+          "localTime": "11:57",
+          "localHour": 11,
+          "dayOfWeek": "Monday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 43206,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "crt_pacing_percent",
+            "value": 99,
+            "unit": "percent"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "no_action",
+          "resolved": true,
+          "tags": [
+            "routine",
+            "stable"
+          ]
+        },
+        {
+          "eventId": "p8-e4",
+          "eventType": "routine_review",
+          "severity": 1,
+          "occurredAtUtc": "2026-03-11T17:03:00Z",
+          "localDate": "2026-03-11",
+          "localTime": "12:03",
+          "localHour": 12,
+          "dayOfWeek": "Wednesday",
+          "timeBucket": "midday",
+          "minutesSincePreviousEvent": 43206,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "crt_pacing_percent",
+            "value": 97,
+            "unit": "percent"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "no_action",
+          "resolved": true,
+          "tags": [
+            "routine",
+            "stable"
+          ]
+        },
+        {
+          "eventId": "p8-e5",
+          "eventType": "routine_review",
+          "severity": 1,
+          "occurredAtUtc": "2026-04-10T17:09:00Z",
+          "localDate": "2026-04-10",
+          "localTime": "12:09",
+          "localHour": 12,
+          "dayOfWeek": "Friday",
+          "timeBucket": "midday",
+          "minutesSincePreviousEvent": 43206,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "crt_pacing_percent",
+            "value": 99,
+            "unit": "percent"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "no_action",
+          "resolved": true,
+          "tags": [
+            "routine",
+            "stable"
+          ]
+        },
+        {
+          "eventId": "p8-e6",
+          "eventType": "routine_review",
+          "severity": 1,
+          "occurredAtUtc": "2026-05-10T17:15:00Z",
+          "localDate": "2026-05-10",
+          "localTime": "12:15",
+          "localHour": 12,
+          "dayOfWeek": "Sunday",
+          "timeBucket": "midday",
+          "minutesSincePreviousEvent": 43206,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "crt_pacing_percent",
+            "value": 97,
+            "unit": "percent"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "no_action",
+          "resolved": true,
+          "tags": [
+            "routine",
+            "stable"
+          ]
+        },
+        {
+          "eventId": "p8-e7",
+          "eventType": "routine_review",
+          "severity": 1,
+          "occurredAtUtc": "2026-06-09T16:50:00Z",
+          "localDate": "2026-06-09",
+          "localTime": "11:50",
+          "localHour": 11,
+          "dayOfWeek": "Tuesday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 43175,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "crt_pacing_percent",
+            "value": 99,
+            "unit": "percent"
+          },
+          "source": "scheduled_device_check",
+          "actionTaken": "no_action",
+          "resolved": true,
+          "tags": [
+            "routine",
+            "stable"
+          ]
+        }
+      ]
+    },
+    {
+      "patientId": "p9",
+      "deviceId": "CLN-2847-JS",
+      "events": [
+        {
+          "eventId": "p9-e1",
+          "eventType": "blood_pressure_elevated",
+          "severity": 6,
+          "occurredAtUtc": "2026-06-18T14:14:00Z",
+          "localDate": "2026-06-18",
+          "localTime": "09:14",
+          "localHour": 9,
+          "dayOfWeek": "Thursday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": null,
+          "rolling7dEventCount": 1,
+          "triggerMetric": {
+            "name": "blood_pressure",
+            "value": "142/90",
+            "unit": "mmhg"
+          },
+          "source": "patient_portal_entry",
+          "actionTaken": "doctor_notified",
+          "resolved": false,
+          "tags": [
+            "hypertension",
+            "chf_context"
+          ]
+        },
+        {
+          "eventId": "p9-e2",
+          "eventType": "blood_pressure_elevated",
+          "severity": 6,
+          "occurredAtUtc": "2026-06-19T14:15:00Z",
+          "localDate": "2026-06-19",
+          "localTime": "09:15",
+          "localHour": 9,
+          "dayOfWeek": "Friday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 1441,
+          "rolling7dEventCount": 2,
+          "triggerMetric": {
+            "name": "blood_pressure",
+            "value": "143/91",
+            "unit": "mmhg"
+          },
+          "source": "patient_portal_entry",
+          "actionTaken": "doctor_notified",
+          "resolved": false,
+          "tags": [
+            "hypertension",
+            "chf_context"
+          ]
+        },
+        {
+          "eventId": "p9-e3",
+          "eventType": "blood_pressure_elevated",
+          "severity": 6,
+          "occurredAtUtc": "2026-06-20T14:16:00Z",
+          "localDate": "2026-06-20",
+          "localTime": "09:16",
+          "localHour": 9,
+          "dayOfWeek": "Saturday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 1441,
+          "rolling7dEventCount": 3,
+          "triggerMetric": {
+            "name": "blood_pressure",
+            "value": "144/90",
+            "unit": "mmhg"
+          },
+          "source": "patient_portal_entry",
+          "actionTaken": "doctor_notified",
+          "resolved": false,
+          "tags": [
+            "hypertension",
+            "chf_context"
+          ]
+        },
+        {
+          "eventId": "p9-e4",
+          "eventType": "blood_pressure_elevated",
+          "severity": 6,
+          "occurredAtUtc": "2026-06-21T14:17:00Z",
+          "localDate": "2026-06-21",
+          "localTime": "09:17",
+          "localHour": 9,
+          "dayOfWeek": "Sunday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 1441,
+          "rolling7dEventCount": 4,
+          "triggerMetric": {
+            "name": "blood_pressure",
+            "value": "142/91",
+            "unit": "mmhg"
+          },
+          "source": "patient_portal_entry",
+          "actionTaken": "doctor_notified",
+          "resolved": false,
+          "tags": [
+            "hypertension",
+            "chf_context"
+          ]
+        },
+        {
+          "eventId": "p9-e5",
+          "eventType": "blood_pressure_elevated",
+          "severity": 6,
+          "occurredAtUtc": "2026-06-22T14:18:00Z",
+          "localDate": "2026-06-22",
+          "localTime": "09:18",
+          "localHour": 9,
+          "dayOfWeek": "Monday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 1441,
+          "rolling7dEventCount": 5,
+          "triggerMetric": {
+            "name": "blood_pressure",
+            "value": "143/90",
+            "unit": "mmhg"
+          },
+          "source": "patient_portal_entry",
+          "actionTaken": "doctor_notified",
+          "resolved": false,
+          "tags": [
+            "hypertension",
+            "chf_context"
+          ]
+        },
+        {
+          "eventId": "p9-e6",
+          "eventType": "blood_pressure_elevated",
+          "severity": 6,
+          "occurredAtUtc": "2026-06-23T14:14:00Z",
+          "localDate": "2026-06-23",
+          "localTime": "09:14",
+          "localHour": 9,
+          "dayOfWeek": "Tuesday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 1436,
+          "rolling7dEventCount": 6,
+          "triggerMetric": {
+            "name": "blood_pressure",
+            "value": "144/91",
+            "unit": "mmhg"
+          },
+          "source": "patient_portal_entry",
+          "actionTaken": "doctor_notified",
+          "resolved": false,
+          "tags": [
+            "hypertension",
+            "chf_context"
+          ]
+        },
+        {
+          "eventId": "p9-e7",
+          "eventType": "blood_pressure_elevated",
+          "severity": 6,
+          "occurredAtUtc": "2026-06-24T14:15:00Z",
+          "localDate": "2026-06-24",
+          "localTime": "09:15",
+          "localHour": 9,
+          "dayOfWeek": "Wednesday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 1441,
+          "rolling7dEventCount": 7,
+          "triggerMetric": {
+            "name": "blood_pressure",
+            "value": "142/90",
+            "unit": "mmhg"
+          },
+          "source": "patient_portal_entry",
+          "actionTaken": "doctor_notified",
+          "resolved": false,
+          "tags": [
+            "hypertension",
+            "chf_context"
+          ]
+        },
+        {
+          "eventId": "p9-e8",
+          "eventType": "blood_pressure_elevated",
+          "severity": 3,
+          "occurredAtUtc": "2026-06-25T14:16:00Z",
+          "localDate": "2026-06-25",
+          "localTime": "09:16",
+          "localHour": 9,
+          "dayOfWeek": "Thursday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 1441,
+          "rolling7dEventCount": 7,
+          "triggerMetric": {
+            "name": "blood_pressure",
+            "value": "129/83",
+            "unit": "mmhg"
+          },
+          "source": "patient_portal_entry",
+          "actionTaken": "self_monitoring_reinforced",
+          "resolved": false,
+          "tags": [
+            "hypertension",
+            "improving"
+          ]
+        },
+        {
+          "eventId": "p9-e9",
+          "eventType": "blood_pressure_elevated",
+          "severity": 3,
+          "occurredAtUtc": "2026-06-26T14:17:00Z",
+          "localDate": "2026-06-26",
+          "localTime": "09:17",
+          "localHour": 9,
+          "dayOfWeek": "Friday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 1441,
+          "rolling7dEventCount": 7,
+          "triggerMetric": {
+            "name": "blood_pressure",
+            "value": "130/82",
+            "unit": "mmhg"
+          },
+          "source": "patient_portal_entry",
+          "actionTaken": "self_monitoring_reinforced",
+          "resolved": false,
+          "tags": [
+            "hypertension",
+            "improving"
+          ]
+        },
+        {
+          "eventId": "p9-e10",
+          "eventType": "blood_pressure_elevated",
+          "severity": 3,
+          "occurredAtUtc": "2026-06-27T14:18:00Z",
+          "localDate": "2026-06-27",
+          "localTime": "09:18",
+          "localHour": 9,
+          "dayOfWeek": "Saturday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 1441,
+          "rolling7dEventCount": 7,
+          "triggerMetric": {
+            "name": "blood_pressure",
+            "value": "128/83",
+            "unit": "mmhg"
+          },
+          "source": "patient_portal_entry",
+          "actionTaken": "self_monitoring_reinforced",
+          "resolved": false,
+          "tags": [
+            "hypertension",
+            "improving"
+          ]
+        },
+        {
+          "eventId": "p9-e11",
+          "eventType": "blood_pressure_elevated",
+          "severity": 3,
+          "occurredAtUtc": "2026-06-28T14:14:00Z",
+          "localDate": "2026-06-28",
+          "localTime": "09:14",
+          "localHour": 9,
+          "dayOfWeek": "Sunday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 1436,
+          "rolling7dEventCount": 8,
+          "triggerMetric": {
+            "name": "blood_pressure",
+            "value": "129/82",
+            "unit": "mmhg"
+          },
+          "source": "patient_portal_entry",
+          "actionTaken": "self_monitoring_reinforced",
+          "resolved": false,
+          "tags": [
+            "hypertension",
+            "improving"
+          ]
+        },
+        {
+          "eventId": "p9-e12",
+          "eventType": "blood_pressure_elevated",
+          "severity": 3,
+          "occurredAtUtc": "2026-06-29T14:15:00Z",
+          "localDate": "2026-06-29",
+          "localTime": "09:15",
+          "localHour": 9,
+          "dayOfWeek": "Monday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 1441,
+          "rolling7dEventCount": 8,
+          "triggerMetric": {
+            "name": "blood_pressure",
+            "value": "130/83",
+            "unit": "mmhg"
+          },
+          "source": "patient_portal_entry",
+          "actionTaken": "self_monitoring_reinforced",
+          "resolved": false,
+          "tags": [
+            "hypertension",
+            "improving"
+          ]
+        },
+        {
+          "eventId": "p9-e13",
+          "eventType": "blood_pressure_elevated",
+          "severity": 3,
+          "occurredAtUtc": "2026-06-30T14:16:00Z",
+          "localDate": "2026-06-30",
+          "localTime": "09:16",
+          "localHour": 9,
+          "dayOfWeek": "Tuesday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 1441,
+          "rolling7dEventCount": 7,
+          "triggerMetric": {
+            "name": "blood_pressure",
+            "value": "128/82",
+            "unit": "mmhg"
+          },
+          "source": "patient_portal_entry",
+          "actionTaken": "self_monitoring_reinforced",
+          "resolved": false,
+          "tags": [
+            "hypertension",
+            "improving"
+          ]
+        },
+        {
+          "eventId": "p9-e14",
+          "eventType": "blood_pressure_elevated",
+          "severity": 3,
+          "occurredAtUtc": "2026-07-01T14:17:00Z",
+          "localDate": "2026-07-01",
+          "localTime": "09:17",
+          "localHour": 9,
+          "dayOfWeek": "Wednesday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 1441,
+          "rolling7dEventCount": 7,
+          "triggerMetric": {
+            "name": "blood_pressure",
+            "value": "129/83",
+            "unit": "mmhg"
+          },
+          "source": "patient_portal_entry",
+          "actionTaken": "self_monitoring_reinforced",
+          "resolved": false,
+          "tags": [
+            "hypertension",
+            "improving"
+          ]
+        },
+        {
+          "eventId": "p9-e15",
+          "eventType": "blood_pressure_elevated",
+          "severity": 6,
+          "occurredAtUtc": "2026-07-02T14:18:00Z",
+          "localDate": "2026-07-02",
+          "localTime": "09:18",
+          "localHour": 9,
+          "dayOfWeek": "Thursday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 1441,
+          "rolling7dEventCount": 7,
+          "triggerMetric": {
+            "name": "blood_pressure",
+            "value": "138/88",
+            "unit": "mmhg"
+          },
+          "source": "patient_portal_entry",
+          "actionTaken": "medication_review_requested",
+          "resolved": false,
+          "tags": [
+            "hypertension",
+            "morning_cluster",
+            "rising_again"
+          ]
+        },
+        {
+          "eventId": "p9-e16",
+          "eventType": "blood_pressure_elevated",
+          "severity": 6,
+          "occurredAtUtc": "2026-07-03T14:14:00Z",
+          "localDate": "2026-07-03",
+          "localTime": "09:14",
+          "localHour": 9,
+          "dayOfWeek": "Friday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 1436,
+          "rolling7dEventCount": 8,
+          "triggerMetric": {
+            "name": "blood_pressure",
+            "value": "139/88",
+            "unit": "mmhg"
+          },
+          "source": "patient_portal_entry",
+          "actionTaken": "medication_review_requested",
+          "resolved": false,
+          "tags": [
+            "hypertension",
+            "morning_cluster",
+            "rising_again"
+          ]
+        },
+        {
+          "eventId": "p9-e17",
+          "eventType": "blood_pressure_elevated",
+          "severity": 6,
+          "occurredAtUtc": "2026-07-04T14:15:00Z",
+          "localDate": "2026-07-04",
+          "localTime": "09:15",
+          "localHour": 9,
+          "dayOfWeek": "Saturday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 1441,
+          "rolling7dEventCount": 8,
+          "triggerMetric": {
+            "name": "blood_pressure",
+            "value": "140/89",
+            "unit": "mmhg"
+          },
+          "source": "patient_portal_entry",
+          "actionTaken": "medication_review_requested",
+          "resolved": false,
+          "tags": [
+            "hypertension",
+            "morning_cluster",
+            "rising_again"
+          ]
+        },
+        {
+          "eventId": "p9-e18",
+          "eventType": "blood_pressure_elevated",
+          "severity": 6,
+          "occurredAtUtc": "2026-07-05T14:16:00Z",
+          "localDate": "2026-07-05",
+          "localTime": "09:16",
+          "localHour": 9,
+          "dayOfWeek": "Sunday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 1441,
+          "rolling7dEventCount": 7,
+          "triggerMetric": {
+            "name": "blood_pressure",
+            "value": "141/89",
+            "unit": "mmhg"
+          },
+          "source": "patient_portal_entry",
+          "actionTaken": "medication_review_requested",
+          "resolved": false,
+          "tags": [
+            "hypertension",
+            "morning_cluster",
+            "rising_again"
+          ]
+        },
+        {
+          "eventId": "p9-e19",
+          "eventType": "blood_pressure_elevated",
+          "severity": 6,
+          "occurredAtUtc": "2026-07-06T14:17:00Z",
+          "localDate": "2026-07-06",
+          "localTime": "09:17",
+          "localHour": 9,
+          "dayOfWeek": "Monday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 1441,
+          "rolling7dEventCount": 7,
+          "triggerMetric": {
+            "name": "blood_pressure",
+            "value": "142/90",
+            "unit": "mmhg"
+          },
+          "source": "patient_portal_entry",
+          "actionTaken": "medication_review_requested",
+          "resolved": false,
+          "tags": [
+            "hypertension",
+            "morning_cluster",
+            "rising_again"
+          ]
+        },
+        {
+          "eventId": "p9-e20",
+          "eventType": "blood_pressure_elevated",
+          "severity": 6,
+          "occurredAtUtc": "2026-07-07T14:18:00Z",
+          "localDate": "2026-07-07",
+          "localTime": "09:18",
+          "localHour": 9,
+          "dayOfWeek": "Tuesday",
+          "timeBucket": "morning",
+          "minutesSincePreviousEvent": 1441,
+          "rolling7dEventCount": 7,
+          "triggerMetric": {
+            "name": "blood_pressure",
+            "value": "143/90",
+            "unit": "mmhg"
+          },
+          "source": "patient_portal_entry",
+          "actionTaken": "medication_review_requested",
+          "resolved": false,
+          "tags": [
+            "hypertension",
+            "morning_cluster",
+            "rising_again"
+          ]
+        }
+      ]
+    }
+  ]
+}
